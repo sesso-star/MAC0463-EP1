@@ -40,19 +40,17 @@ public class UserTypeScreen extends Activity {
         String nusp = nuspText.getText().toString();
         String passwd = passwdText.getText().toString();
         Log.d(myActivityTag, "Loggin attempt! " + nusp + ": " + passwd);
-        try {
-            postLogin(nusp, passwd);
-        }
-        catch(Exception ex) {}
+
+        postLogin(nusp, passwd, "teacher");
     }
 
 
-    private void postLogin(String nusp, String password) {
+    private void postLogin(final String nusp, final String password, final String userType)  {
         final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
         RequestQueue queue = Volley.newRequestQueue(this);
         final String my_nusp = nusp;
         final String my_password = password;
-        String url = "http://207.38.82.139:8001/login/student";
+        String url = "http://207.38.82.139:8001/login/" + userType;
 
         // Request a string response from Login URL
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -60,22 +58,7 @@ public class UserTypeScreen extends Activity {
                     @Override
                     public void onResponse(String response) {
                         Log.d(myActivityTag, "Response is: "+ response.toString());
-                        JSONObject obj = null;
-                        try {
-                            obj = new JSONObject(response.toString());
-                            if (obj.getString("success").equals ("true")) {
-                                nextScreen();
-                            }
-                            else {
-                                noLoginTextView.setText("Usuário ou senha inválidos!");
-                                noLoginTextView.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        catch (Exception e) {
-                            noLoginTextView.setText("Err... erro no servidor!");
-                            noLoginTextView.setVisibility(View.VISIBLE);
-                            Log.d (myActivityTag, "Couldn't parse server response");
-                        }
+                        proccessLoginResponse (response, nusp, password, userType);
                     }
                 },
                 new Response.ErrorListener() {
@@ -99,9 +82,45 @@ public class UserTypeScreen extends Activity {
         queue.add(stringRequest);
     }
 
-    void nextScreen () {
+
+    private void proccessLoginResponse (String response, String nusp, String password,
+                                       String userType) {
+        final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
+        int authorized;
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(response.toString());
+            if (obj.getString("success").equals ("true"))
+                authorized = 1;
+            else
+                authorized = 0;
+
+        }
+        catch (Exception e) {
+            noLoginTextView.setText("Err... erro no servidor!");
+            noLoginTextView.setVisibility(View.VISIBLE);
+            Log.d (myActivityTag, "Couldn't parse server response");
+            return;
+        }
+
+        if (authorized == 0)
+            if (userType == "teacher")
+                // try again as a student...
+                postLogin(nusp, password, "student");
+            else {
+                noLoginTextView.setText("Usuário ou Senha incorreta!");
+                noLoginTextView.setVisibility(View.VISIBLE);
+            }
+        else {
+            noLoginTextView.setVisibility(View.GONE);
+            nextScreen(userType);
+        }
+    }
+
+
+    private void nextScreen (String userType) {
         final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
         noLoginTextView.setVisibility(View.GONE);
-        Log.d (myActivityTag, "Ready to go to next screen!");
+        Log.d (myActivityTag, "Ready to go to next screen as a " + userType + "!");
     }
 }
