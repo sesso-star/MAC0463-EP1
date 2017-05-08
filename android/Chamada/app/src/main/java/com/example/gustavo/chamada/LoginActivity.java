@@ -1,10 +1,11 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
-import android.app.DownloadManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -22,14 +23,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class UserTypeScreen extends Activity {
+public class LoginActivity extends Activity {
 
-    private static final String myActivityTag = "USER_TYPE_SCREEN";
+    private static final String myActivityTag = "LOGIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_type_screen);
+        setContentView(R.layout.login_activity);
     }
 
 
@@ -85,7 +86,8 @@ public class UserTypeScreen extends Activity {
 
     private void proccessLoginResponse (String response, String nusp, String password,
                                        String userType) {
-        final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
+        TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
+        Button signupButton = (Button) findViewById(R.id.singupButton);
         int authorized;
         JSONObject obj = null;
         try {
@@ -110,6 +112,7 @@ public class UserTypeScreen extends Activity {
             else {
                 noLoginTextView.setText("Usuário ou Senha incorreta!");
                 noLoginTextView.setVisibility(View.VISIBLE);
+                signupButton.setVisibility(View.VISIBLE);
             }
         else {
             noLoginTextView.setVisibility(View.GONE);
@@ -122,5 +125,11 @@ public class UserTypeScreen extends Activity {
         final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
         noLoginTextView.setVisibility(View.GONE);
         Log.d (myActivityTag, "Ready to go to next screen as a " + userType + "!");
+    }
+
+
+    public void startSignUpActivity (View view) {
+        Intent intent = new Intent(this, SingUp.class);
+        startActivity(intent);
     }
 }
