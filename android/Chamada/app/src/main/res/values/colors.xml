@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="mainBlueish">#005570</color>
+    <color name="mainBlueish">#006d8f</color>
     <color name="warningOrange">#ff8026</color>
+    <color name="buttonColor">#11ffffff</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,8 +50,6 @@ public class LoginActivity extends Activity {
     private void postLogin(final String nusp, final String password, final String userType)  {
         final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
         RequestQueue queue = Volley.newRequestQueue(this);
-        final String my_nusp = nusp;
-        final String my_password = password;
         String url = "http://207.38.82.139:8001/login/" + userType;
 
         // Request a string response from Login URL
@@ -58,7 +57,7 @@ public class LoginActivity extends Activity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d(myActivityTag, "Response is: "+ response.toString());
+                        Log.d(myActivityTag, "Response is: "+ response);
                         proccessLoginResponse (response, nusp, password, userType);
                     }
                 },
@@ -73,8 +72,8 @@ public class LoginActivity extends Activity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String,String>();
-                params.put("nusp", my_nusp);
-                params.put("pass", my_password);
+                params.put("nusp", nusp);
+                params.put("pass", password);
                 return params;
             }
 
@@ -91,7 +90,7 @@ public class LoginActivity extends Activity {
         int authorized;
         JSONObject obj = null;
         try {
-            obj = new JSONObject(response.toString());
+            obj = new JSONObject(response);
             if (obj.getString("success").equals ("true"))
                 authorized = 1;
             else
@@ -106,7 +105,7 @@ public class LoginActivity extends Activity {
         }
 
         if (authorized == 0)
-            if (userType == "teacher")
+            if (userType.equals("teacher"))
                 // try again as a student...
                 postLogin(nusp, password, "student");
             else {
@@ -115,16 +114,20 @@ public class LoginActivity extends Activity {
                 signupButton.setVisibility(View.VISIBLE);
             }
         else {
+            boolean isProfessor = userType.equals("teacher");
             noLoginTextView.setVisibility(View.GONE);
-            nextScreen(userType);
+            User u = new User ("", nusp, isProfessor);
+            AppUser.setUser(u);
+            startHomeActivity();
         }
     }
 
 
-    private void nextScreen (String userType) {
+    private void startHomeActivity () {
         final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
         noLoginTextView.setVisibility(View.GONE);
-        Log.d (myActivityTag, "Ready to go to next screen as a " + userType + "!");
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 
 
