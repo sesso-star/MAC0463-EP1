@@ -19,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,48 +39,52 @@ public class LoginActivity extends Activity {
     public void tryLogin(View view) {
         EditText nuspText = (EditText)findViewById(R.id.nuspText);
         EditText passwdText = (EditText) findViewById(R.id.passwordText);
-
         String nusp = nuspText.getText().toString();
         String passwd = passwdText.getText().toString();
-        Log.d(myActivityTag, "Loggin attempt! " + nusp + ": " + passwd);
-
         postLogin(nusp, passwd, "teacher");
     }
 
 
+    private class LoginResponseListener implements Response.Listener<String> {
+
+        private String nusp;
+        private String password;
+        private String userType;
+
+        public LoginResponseListener (String nusp, String pass, String userType) {
+            this.nusp = nusp;
+            this.password = pass;
+            this.userType = userType;
+        }
+
+        @Override
+        public void onResponse (String response) {
+            proccessLoginResponse (response, this.nusp, this.password, this.userType);
+        }
+    }
+
+
+    private class LoginErrorListener implements Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
+            Log.d(myActivityTag, "Error! " + error.getMessage());
+            noLoginTextView.setText("Não conseguimos nos conectar :(");
+            noLoginTextView.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     private void postLogin(final String nusp, final String password, final String userType)  {
         final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
-        RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://207.38.82.139:8001/login/" + userType;
-
-        // Request a string response from Login URL
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(myActivityTag, "Response is: "+ response);
-                        proccessLoginResponse (response, nusp, password, userType);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(myActivityTag, "Error! " + error.getMessage());
-                        noLoginTextView.setText("Não conseguimos nos conectar :(");
-                        noLoginTextView.setVisibility(View.VISIBLE);
-                    }
-                }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String,String>();
-                params.put("nusp", nusp);
-                params.put("pass", password);
-                return params;
-            }
-
-        };
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        Map<String, String> params = new HashMap<String,String>();
+        params.put("nusp", nusp);
+        params.put("pass", password);
+        ServerConnection sc = ServerConnection.getInstance(this);
+        sc.login(new LoginResponseListener (nusp, password, userType), new LoginErrorListener(),
+                userType, params);
     }
 
 
