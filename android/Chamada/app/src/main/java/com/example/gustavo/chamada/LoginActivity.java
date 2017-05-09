@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,12 +38,16 @@ public class LoginActivity extends Activity {
     }
 
 
+
     public void tryLogin(View view) {
+        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
         EditText nuspText = (EditText)findViewById(R.id.nuspText);
         EditText passwdText = (EditText) findViewById(R.id.passwordText);
         String nusp = nuspText.getText().toString();
         String passwd = passwdText.getText().toString();
+        // We try to login as professor, if we can't login, we try again as a student
         postLogin(nusp, passwd, "teacher");
+        ScreenUtils.enableDisableView(layout, false);
     }
 
 
@@ -69,16 +75,15 @@ public class LoginActivity extends Activity {
         @Override
         public void onErrorResponse(VolleyError error) {
             TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
+            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
+            ScreenUtils.enableDisableView(layout, true);
             Log.d(myActivityTag, "Error! " + error.getMessage());
             noLoginTextView.setText("Não conseguimos nos conectar :(");
             noLoginTextView.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void postLogin(final String nusp, final String password, final String userType)  {
-        final TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
-        String url = "http://207.38.82.139:8001/login/" + userType;
         Map<String, String> params = new HashMap<String,String>();
         params.put("nusp", nusp);
         params.put("pass", password);
@@ -92,6 +97,8 @@ public class LoginActivity extends Activity {
                                        String userType) {
         TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
         Button signupButton = (Button) findViewById(R.id.singupButton);
+        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
+        ScreenUtils.enableDisableView(layout, true);
         int authorized;
         JSONObject obj = null;
         try {

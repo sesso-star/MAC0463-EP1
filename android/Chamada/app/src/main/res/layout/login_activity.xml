@@ -5,66 +5,68 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mainBlueish"
+    android:visibility="visible"
+    android:id="@+id/loginLayout"
     tools:context="com.example.gustavo.chamada.LoginActivity"
-    tools:layout_editor_absoluteY="0dp"
-    tools:layout_editor_absoluteX="0dp" >
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="0dp">
 
 
     <EditText
         android:id="@+id/nuspText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:layout_marginEnd="67dp"
+        android:layout_marginLeft="67dp"
+        android:layout_marginRight="67dp"
+        android:layout_marginStart="67dp"
         android:ems="10"
         android:inputType="text"
         android:lineSpacingExtra="8sp"
         android:maxLines="1"
         android:textSize="14sp"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/senhaTextView"
-        android:layout_marginStart="67dp"
-        android:layout_marginEnd="67dp"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="7dp"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="67dp"
-        android:layout_marginRight="67dp"
-        app:layout_constraintHorizontal_bias="0.0" />
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <EditText
         android:id="@+id/passwordText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="67dp"
+        android:layout_marginLeft="67dp"
+        android:layout_marginRight="67dp"
+        android:layout_marginStart="67dp"
         android:ems="10"
         android:inputType="textPassword"
         android:lineSpacingExtra="8sp"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="67dp"
-        android:layout_marginEnd="67dp"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="67dp"
-        android:layout_marginRight="67dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintHorizontal_bias="0.0"
-        android:layout_marginBottom="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <TextView
         android:id="@+id/senhaTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:text="Senha"
         android:textSize="18sp"
-        tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/passwordText"
-        android:layout_marginStart="8dp"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="10dp"
         app:layout_constraintLeft_toLeftOf="@+id/passwordText"
-        android:layout_marginLeft="8dp" />
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1" />
 
     <TextView
         android:id="@+id/nuspTextView"
@@ -86,35 +88,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="14dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:text="asd"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@color/warningOrange"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp" />
+        app:layout_constraintRight_toRightOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="240dp"
         android:layout_height="50dp"
         android:layout_marginBottom="19dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center"
         android:orientation="horizontal"
         android:weightSum="4"
-        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/noLoginTextView"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_editor_absoluteY="493dp"
-        tools:layout_editor_absoluteX="79dp">
+        app:layout_constraintRight_toRightOf="parent">
 
 
         <Button
@@ -139,55 +141,55 @@
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
             android:layout_weight="2"
+            android:onClick="startSignUpActivity"
             android:text="Cadastrar-se"
             android:visibility="gone"
-            android:onClick="startSignUpActivity"
             tools:layout_editor_absoluteX="219dp"
             tools:layout_editor_absoluteY="504dp" />
 
     </LinearLayout>
 
     <!--<RadioGroup-->
-        <!--android:layout_width="333dp"-->
-        <!--android:layout_height="52dp"-->
-        <!--android:checkedButton="@+id/rb_female"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_marginBottom="31dp"-->
-        <!--android:layout_marginLeft="35dp"-->
-        <!--android:layout_marginRight="35dp"-->
-        <!--app:layout_constraintBottom_toTopOf="@+id/nuspText"-->
-        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-        <!--app:layout_constraintRight_toRightOf="parent">-->
+    <!--android:layout_width="333dp"-->
+    <!--android:layout_height="52dp"-->
+    <!--android:checkedButton="@+id/rb_female"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:layout_marginBottom="31dp"-->
+    <!--android:layout_marginLeft="35dp"-->
+    <!--android:layout_marginRight="35dp"-->
+    <!--app:layout_constraintBottom_toTopOf="@+id/nuspText"-->
+    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+    <!--app:layout_constraintRight_toRightOf="parent">-->
 
 
-        <!--<RadioButton-->
-            <!--android:id="@+id/alunoCheck"-->
-            <!--style="@style/Widget.AppCompat.CompoundButton.RadioButton"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:button="?android:attr/textCheckMark"-->
-            <!--android:checked="true"-->
-            <!--android:text="Aluno"-->
-            <!--android:textAlignment="center" />-->
+    <!--<RadioButton-->
+    <!--android:id="@+id/alunoCheck"-->
+    <!--style="@style/Widget.AppCompat.CompoundButton.RadioButton"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:button="?android:attr/textCheckMark"-->
+    <!--android:checked="true"-->
+    <!--android:text="Aluno"-->
+    <!--android:textAlignment="center" />-->
 
-        <!--<RadioButton-->
-            <!--android:id="@+id/radioButton2"-->
-            <!--style="@style/Widget.AppCompat.CompoundButton.RadioButton"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_alignBottom="@+id/alunoCheck"-->
-            <!--android:layout_alignParentLeft="true"-->
-            <!--android:layout_alignParentStart="true"-->
-            <!--android:button="?android:attr/textCheckMarkInverse"-->
-            <!--android:checked="false"-->
-            <!--android:text="Professor"-->
-            <!--android:textAlignment="center"-->
-            <!--app:buttonTint="@color/warningOrange" />-->
+    <!--<RadioButton-->
+    <!--android:id="@+id/radioButton2"-->
+    <!--style="@style/Widget.AppCompat.CompoundButton.RadioButton"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_alignBottom="@+id/alunoCheck"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:button="?android:attr/textCheckMarkInverse"-->
+    <!--android:checked="false"-->
+    <!--android:text="Professor"-->
+    <!--android:textAlignment="center"-->
+    <!--app:buttonTint="@color/warningOrange" />-->
     <!--</RadioGroup>-->
 
 </android.support.constraint.ConstraintLayout>
