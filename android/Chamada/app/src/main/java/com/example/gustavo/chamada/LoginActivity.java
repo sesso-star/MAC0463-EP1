@@ -50,7 +50,11 @@ public class LoginActivity extends Activity {
         ScreenUtils.enableDisableView(layout, false);
     }
 
-
+    /*
+    *
+    *  This class is used as a listener to the server response when the login request is successful
+    *
+    * */
     private class LoginResponseListener implements Response.Listener<String> {
 
         private String nusp;
@@ -70,6 +74,11 @@ public class LoginActivity extends Activity {
     }
 
 
+    /*
+    *
+    *  This class is used as an error listener for the login request
+    *
+    * */
     private class LoginErrorListener implements Response.ErrorListener {
 
         @Override
@@ -107,7 +116,6 @@ public class LoginActivity extends Activity {
                 authorized = 1;
             else
                 authorized = 0;
-
         }
         catch (Exception e) {
             noLoginTextView.setText("Err... erro no servidor!");

@@ -2,6 +2,7 @@ package com.example.gustavo.chamada;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,9 +32,65 @@ public class SingUp extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sing_up);
+        RadioGroup userTypeGroup = (RadioGroup) findViewById(R.id.userTypeRadioGroup);
+        if (AppUser.getCurrentUser().isProfessor())
+            userTypeGroup.setVisibility(View.VISIBLE);
+        else
+            userTypeGroup.setVisibility(View.GONE);
     }
 
 
+    /*
+    *
+    *  This class is used as a listener to the server response when the request is successful
+    *
+    * */
+    private class SignUpResponseListener implements Response.Listener<String> {
+
+        private String name;
+        private String nusp;
+        private String password;
+        private String userType;
+
+        public SignUpResponseListener (String name, String nusp, String pass, String userType) {
+            this.name = name;
+            this.nusp = nusp;
+            this.password = pass;
+            this.userType = userType;
+        }
+
+        @Override
+        public void onResponse (String response) {
+            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.singUpLayout);
+            ScreenUtils.enableDisableView(layout, true);
+            proccessSignUpResponse(response, this.nusp, this.password, this.userType);
+        }
+    }
+
+
+    /*
+    *
+    *  This class is used as an error listener for the login request
+    *
+    * */
+    private class SignUpErrorListener implements Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.singUpLayout);
+            ScreenUtils.enableDisableView(layout, true);
+            TextView responseTextView = (TextView) findViewById(R.id.signupResponseMessage);
+//            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
+//            ScreenUtils.enableDisableView(layout, true);
+            Log.d(myActivityTag, "Error! " + error.getMessage());
+            responseTextView.setText("Não conseguimos nos conectar :(");
+            responseTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /*
+    * Deals with clicks on register button
+    * */
     public void registerUser(View view) {
         TextView nameT = (TextView) findViewById(R.id.nameText);
         String name = nameT.getText().toString();
@@ -54,43 +111,28 @@ public class SingUp extends Activity {
     }
 
 
-    public void postSignUp (final String name, final String nusp, final String pass, String
+    /*
+    * Calls server connection for signing up
+    * */
+    public void postSignUp (final String name, final String nusp, final String pass, final String
             userType) {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://207.38.82.139:8001/" + userType + "/add";
-
-        // Request a string response from Login URL
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d(myActivityTag, "Response is: "+ response.toString());
-                        proccessSignUpResponse (response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d(myActivityTag, "Error! " + error.getMessage());
-                    }
-                }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String,String>();
-                params.put("nusp", nusp);
-                params.put("name", name);
-                params.put("pass", pass);
-                return params;
-            }
-
-        };
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-
+        Map<String, String> params = new HashMap<String,String>();
+        params.put("nusp", nusp);
+        params.put("name", name);
+        params.put("pass", pass);
+        ServerConnection sc = ServerConnection.getInstance(this);
+        sc.singUp(new SignUpResponseListener(name, nusp, pass, userType), new SignUpErrorListener(),
+                userType, params);
+        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.singUpLayout);
+        ScreenUtils.enableDisableView(layout, false);
     }
 
 
-    private void proccessSignUpResponse (String response) {
+    /*
+    * Updates app after succesful user sign up
+    * */
+    private void proccessSignUpResponse (String response, String nusp, String password,
+                                         String userType) {
         TextView responseTextView = (TextView) findViewById(R.id.signupResponseMessage);
         Button signupButton = (Button) findViewById(R.id.signUpButton);
         JSONObject obj = null;
@@ -103,17 +145,16 @@ public class SingUp extends Activity {
             }
             else {
                 success = false;
-                responseTextView.setText("Não conseguimos te registrar! Você não esqueceu" +
-                        " a senha?");
+                responseTextView.setText("Não conseguimos te registrar!");
             }
-
         }
         catch (Exception e) {
             responseTextView.setText("Err... erro no servidor!");
             success = false;
         }
         responseTextView.setVisibility(View.VISIBLE);
-        if (success)
+        if (success) {
             signupButton.setVisibility(View.GONE);
+        }
     }
 }

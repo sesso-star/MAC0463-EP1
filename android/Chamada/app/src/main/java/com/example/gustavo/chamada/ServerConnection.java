@@ -32,26 +32,31 @@ public class ServerConnection extends Activity {
     private RequestQueue requestQueue;
     private static ServerConnection instance = null;
 
-    private ServerConnection (Context context) {
+
+    private ServerConnection(Context context) {
         myContext = context;
         requestQueue = getRequestQueue ();
-
     }
 
-    public static ServerConnection getInstance (Context context) {
+
+    public static ServerConnection getInstance(Context context) {
         if (instance == null)
             instance = new ServerConnection(context);
         Log.d ("AAAAAAAA", instance.toString());
         return instance;
     }
 
-    public RequestQueue getRequestQueue () {
+
+    public RequestQueue getRequestQueue() {
         if (requestQueue == null)
             requestQueue = Volley.newRequestQueue(myContext.getApplicationContext());
         return requestQueue;
     }
 
-    public void login (Response.Listener<String> responseListener,
+    /*
+    * Sends a login request to the server
+    * */
+    public void login(Response.Listener<String> responseListener,
                        Response.ErrorListener errorListener,
                        String userType, final Map<String, String> params) {
         String url = "http://207.38.82.139:8001/login/" + userType;
@@ -66,6 +71,24 @@ public class ServerConnection extends Activity {
         getRequestQueue().add(stringRequest);
     }
 
+
+    /*
+    * Sends a register student/teacher request to the server
+    * */
+    public void singUp(Response.Listener<String> responseListener,
+                       Response.ErrorListener errorListener, String userType,
+                       final Map<String, String> params) {
+        String url = "http://207.38.82.139:8001/" + userType + "/add";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,responseListener,
+                errorListener) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+        };
+        getRequestQueue().add(stringRequest);
+    }
 
     /*This class implementation is based on the implementation available at:
     *
