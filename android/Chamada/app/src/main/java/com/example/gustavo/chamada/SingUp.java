@@ -1,6 +1,7 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
@@ -155,6 +156,16 @@ public class SingUp extends Activity {
         responseTextView.setVisibility(View.VISIBLE);
         if (success) {
             signupButton.setVisibility(View.GONE);
+            boolean isProfessor = userType.equals("teacher");
+            User u = new User("", nusp, isProfessor);
+            AppUser.setUser(u);
+            startHomeActivity();
         }
+    }
+
+
+    private void startHomeActivity () {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
     }
 }

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mainBlueish"
+    android:id="@+id/homeLayout"
     tools:context="com.example.gustavo.chamada.HomeActivity">
 
     <TextView
@@ -16,21 +17,20 @@
         android:text="Bem-vindo (a),"
         android:textSize="34sp"
         android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintBottom_toTopOf="@+id/userNameTextView"
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="@+id/menuList" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/userNameTextView"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="39dp"
+        android:layout_marginLeft="0dp"
         android:layout_marginStart="8dp"
-        android:text="UserName"
         android:textColor="#ffd166"
         android:textSize="24sp"
-        android:layout_marginBottom="39dp"
         app:layout_constraintBottom_toTopOf="@+id/menuList"
-        android:layout_marginLeft="0dp"
         app:layout_constraintLeft_toLeftOf="@+id/textView4" />
 
     <LinearLayout

@@ -14,33 +14,39 @@ public class User {
     }
 
 
-    public User (String name, String nusp, boolean isProfessor) {
+    public User(String name, String nusp, boolean isProfessor) {
         this.name = name;
         this.nusp = nusp;
         this.isProfessor = isProfessor;
     }
 
 
-    public void setName (String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
 
-    public String getName () {
+    public String getName() {
         return name;
     }
 
 
-    public void setNusp (String nusp) {
+    public void setNusp(String nusp) {
         this.nusp = nusp;
     }
 
-
-    public String getNusp () {
+    public String getNusp() {
         return nusp;
     }
 
-    public boolean isProfessor () {
+    public boolean isProfessor() {
         return this.isProfessor;
+    }
+
+    public String getUserType() {
+        if (isProfessor())
+            return "teacher";
+        else
+            return "student";
     }
 }

@@ -42,7 +42,6 @@ public class ServerConnection extends Activity {
     public static ServerConnection getInstance(Context context) {
         if (instance == null)
             instance = new ServerConnection(context);
-        Log.d ("AAAAAAAA", instance.toString());
         return instance;
     }
 
@@ -79,7 +78,6 @@ public class ServerConnection extends Activity {
                        Response.ErrorListener errorListener, String userType,
                        final Map<String, String> params) {
         String url = "http://207.38.82.139:8001/" + userType + "/add";
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,responseListener,
                 errorListener) {
             @Override
@@ -89,6 +87,19 @@ public class ServerConnection extends Activity {
         };
         getRequestQueue().add(stringRequest);
     }
+
+
+    /*
+    * Sends a server request for student/teacher info
+    * */
+    public void fetchUser(Response.Listener<String> responseListener,
+                          Response.ErrorListener errorListener, String nusp, String userType) {
+        String url = "http://207.38.82.139:8001/" + userType + "/get/" + nusp;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,responseListener,
+                errorListener);
+        getRequestQueue().add(stringRequest);
+    }
+
 
     /*This class implementation is based on the implementation available at:
     *
