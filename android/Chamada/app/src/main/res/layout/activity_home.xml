@@ -8,80 +8,97 @@
     android:id="@+id/homeLayout"
     tools:context="com.example.gustavo.chamada.HomeActivity">
 
+    <Button
+        android:id="@+id/changeProfileButton"
+        style="@android:style/Widget.Button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/profile"
+        android:backgroundTint="@color/Yerangish"
+        android:elevation="0dp"
+        android:textColor="@android:color/background_light"
+        android:typeface="normal"
+        app:layout_constraintLeft_toLeftOf="@+id/userNameTextView"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/seminarListView" />
+
+    <Button
+        android:id="@+id/addUserButton"
+        style="@android:style/Widget.Button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/add_user"
+        android:backgroundTint="@color/Yerangish"
+        android:textColor="#FFe240"
+        app:layout_constraintLeft_toRightOf="@+id/changeProfileButton"
+        android:layout_marginStart="15dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/seminarListView" />
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginStart="8dp"
         android:text="Bem-vindo (a),"
+        android:textColor="@android:color/background_light"
         android:textSize="34sp"
-        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/userNameTextView"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/menuList" />
+        app:layout_constraintLeft_toLeftOf="@+id/seminarListView" />
 
     <TextView
         android:id="@+id/userNameTextView"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="39dp"
-        android:layout_marginLeft="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:textColor="#ffd166"
+        android:text="Fulaninho da SIlva"
+        android:textColor="@color/Yerangish"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/menuList"
+        app:layout_constraintBottom_toTopOf="@+id/changeProfileButton"
         app:layout_constraintLeft_toLeftOf="@+id/textView4" />
 
-    <LinearLayout
-        android:id="@+id/menuList"
-        android:layout_width="309dp"
-        android:layout_height="288dp"
+    <ScrollView
+        android:id="@+id/seminarListView"
+        android:layout_width="327dp"
+        android:layout_height="350dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:orientation="vertical"
-        android:gravity="center"
-        app:layout_constraintHorizontal_bias="0.514"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="100dp">
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
 
-        <Button
-            android:id="@+id/changeProfileButton"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="250dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_height="wrap_content"
-            android:background="@color/buttonColor"
-            android:text="Alterar Cadastro"
-            android:textColor="@android:color/background_light"
-            android:typeface="normal" />
+        <LinearLayout
+            android:id="@+id/seminarList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="225dp">
 
-        <Button
-            android:id="@+id/registerProfessorButton"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/buttonColor"
-            android:text="Adicionar Professor"
-            android:textColor="@android:color/background_light"
-            android:typeface="normal" />
+            <Button
+                android:id="@+id/button2"
+                style="@style/Widget.AppCompat.Button"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/buttonColor"
+                android:text="seminário\"
+                android:textColor="@android:color/background_light" />
 
-        <Button
-            android:id="@+id/listSeminarsButton"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/buttonColor"
-            android:text="Visualizar Seminários"
-            android:textColor="@android:color/background_light"
-            android:typeface="normal" />
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

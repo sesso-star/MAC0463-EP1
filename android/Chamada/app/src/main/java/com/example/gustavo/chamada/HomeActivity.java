@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
@@ -26,12 +27,12 @@ public class HomeActivity extends Activity {
 
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
         ScreenUtils.enableDisableView(layout, false);
-        Button registerProfessorButton = (Button) findViewById(R.id.registerProfessorButton);
-        fetchUserName();
+        Button addUserButton = (Button) findViewById(R.id.addUserButton);
         if (!AppUser.getCurrentUser().isProfessor ()) {
-            registerProfessorButton.setVisibility(View.GONE);
+            addUserButton.setVisibility(View.GONE);
         }
-
+        fetchUserName();
+        fetchSeminarLsit();
     }
 
 
@@ -50,19 +51,23 @@ public class HomeActivity extends Activity {
 
         @Override
         public void onResponse (String response) {
-            JSONObject obj = null;
-            String name = "";
+            JSONObject respJO = null;
             try {
-                obj = new JSONObject(response.toString());
-                JSONObject data = obj.getJSONObject("data");
-                name = data.getString("name");
-                Log.d (myActivityTag, "Name fetched: " + name);
+                respJO = new JSONObject(response.toString());
+                JSONArray seminarJArray = new JSONArray(respJO.getString("data"));
+                for (int i = 0; i < seminarJArray.length(); i++) {
+                    JSONObject seminarJObj = seminarJArray.getJSONObject(i);
+                    String name = seminarJObj.getString("name");
+                    String id = seminarJObj.getString("id");
+                    Seminar s = new Seminar(id, name);
+                }
             }
-            catch (Exception e) {}
+            catch (Exception e) {
+                /* TODO: blame server */
+                Log.d (myActivityTag, "Couldn't parse server response");
+            }
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
             ScreenUtils.enableDisableView(layout, true);
-            TextView userNameT = (TextView) findViewById(R.id.userNameTextView);
-            userNameT.setText(name);
         }
     }
 
@@ -86,5 +91,47 @@ public class HomeActivity extends Activity {
         ServerConnection sc = ServerConnection.getInstance(this);
         sc.fetchUser(new FetchUserResponseListener (u.getNusp(), u.getUserType()),
                 new FetchUserErrorListener(), u.getNusp(), u.getUserType());
+    }
+
+
+
+    /*
+   *  Listener to server request for getting an user info
+   * */
+    private class FetchSeminarResponseListener implements Response.Listener<String> {
+        @Override
+        public void onResponse(String response) {
+            processSeminarFetch(response);
+            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
+            ScreenUtils.enableDisableView(layout, true);
+            Log.d(myActivityTag, response);
+        }
+    }
+
+    /*
+    *  This class is used as an error listener for the login request
+    * */
+    private class FetchSeminarErrorListener implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            /* Something wrong... go to login screen ?
+            * TODO: put alert message here and go to login screen */
+            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
+            ScreenUtils.enableDisableView(layout, true);
+            Log.d(myActivityTag, error.toString());
+        }
+    }
+
+    private void fetchSeminarLsit() {
+        ServerConnection sc = ServerConnection.getInstance(this);
+        sc.fetchSeminars(new FetchSeminarResponseListener(), new FetchSeminarErrorListener());
+    }
+
+    private void processSeminarFetch(String s) {
+        JSONObject resJO = null;
+        try {
+
+        }
+        catch(Exception e) {}
     }
 }

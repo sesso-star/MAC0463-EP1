@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
@@ -24,10 +25,10 @@ import java.util.Map;
  * This class is responsible for making any kind of request to the server.
  *
  */
-
 public class ServerConnection extends Activity {
 
     static private final String serverUrl = "http://207.38.82.139:8001";
+    static private final int MY_TIMEOUT_MS = 7000;
     private static Context myContext;
     private RequestQueue requestQueue;
     private static ServerConnection instance = null;
@@ -52,13 +53,20 @@ public class ServerConnection extends Activity {
         return requestQueue;
     }
 
+
+    private void addToRequestQueue(Request<String> req) {
+        req.setRetryPolicy(new DefaultRetryPolicy(MY_TIMEOUT_MS, 2,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        getRequestQueue().add(req);
+    }
+
     /*
     * Sends a login request to the server
     * */
     public void login(Response.Listener<String> responseListener,
                        Response.ErrorListener errorListener,
                        String userType, final Map<String, String> params) {
-        String url = "http://207.38.82.139:8001/login/" + userType;
+        String url = serverUrl + "/login/" + userType;
         // Request a string response from Login URL
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
                 errorListener){
@@ -67,7 +75,7 @@ public class ServerConnection extends Activity {
                 return params;
             }
         };
-        getRequestQueue().add(stringRequest);
+        addToRequestQueue(stringRequest);
     }
 
 
@@ -77,7 +85,7 @@ public class ServerConnection extends Activity {
     public void singUp(Response.Listener<String> responseListener,
                        Response.ErrorListener errorListener, String userType,
                        final Map<String, String> params) {
-        String url = "http://207.38.82.139:8001/" + userType + "/add";
+        String url = serverUrl + "/" + userType + "/add";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,responseListener,
                 errorListener) {
             @Override
@@ -85,7 +93,7 @@ public class ServerConnection extends Activity {
                 return params;
             }
         };
-        getRequestQueue().add(stringRequest);
+        addToRequestQueue(stringRequest);
     }
 
 
@@ -94,12 +102,22 @@ public class ServerConnection extends Activity {
     * */
     public void fetchUser(Response.Listener<String> responseListener,
                           Response.ErrorListener errorListener, String nusp, String userType) {
-        String url = "http://207.38.82.139:8001/" + userType + "/get/" + nusp;
+        String url = serverUrl + "/" + userType + "/get/" + nusp;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,responseListener,
                 errorListener);
-        getRequestQueue().add(stringRequest);
+        addToRequestQueue(stringRequest);
     }
 
+
+    /*
+    * Sends a server request for the list of seminars */
+    public void fetchSeminars(Response.Listener<String> responseListener,
+                              Response.ErrorListener errorListener) {
+        String url = serverUrl + "/seminar";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener,
+                errorListener);
+        addToRequestQueue(stringRequest);
+    }
 
     /*This class implementation is based on the implementation available at:
     *
