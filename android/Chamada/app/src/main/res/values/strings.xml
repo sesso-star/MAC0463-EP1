@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Chamada</string>
+    <string name="welcome_message">Bem-vindo (a),</string>
 </resources>

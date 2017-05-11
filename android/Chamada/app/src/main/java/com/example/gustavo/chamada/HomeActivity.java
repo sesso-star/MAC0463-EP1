@@ -1,9 +1,11 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.support.constraint.solver.widgets.WidgetContainer;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
@@ -153,11 +155,12 @@ public class HomeActivity extends Activity {
         int buttonColor = ResourcesCompat.getColor(getResources(), R.color.buttonColor, null);
         for (int i = 0; i < seminars.length; i++) {
             Seminar s = seminars[i];
-            Button seminarButton = new Button(this);
+            Button seminarButton = new Button(semButtonMold.getContext());
             seminarButton.setLayoutParams(seminarLayout);
             seminarButton.setText(s.getName());
             seminarButton.setBackgroundColor(buttonColor);
             seminarButton.setTextColor(textColor);
+            seminarButton.setHeight(semButtonMold.getHeight());
             View.OnClickListener listener = new clickSeminarListener(s);
             seminarButton.setOnClickListener(listener);
             linearView.addView(seminarButton);
