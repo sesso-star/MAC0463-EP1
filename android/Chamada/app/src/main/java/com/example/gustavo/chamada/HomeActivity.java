@@ -1,6 +1,7 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.constraint.solver.widgets.WidgetContainer;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.text.Layout;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -155,9 +158,10 @@ public class HomeActivity extends Activity {
         int buttonColor = ResourcesCompat.getColor(getResources(), R.color.buttonColor, null);
         for (int i = 0; i < seminars.length; i++) {
             Seminar s = seminars[i];
-            Button seminarButton = new Button(semButtonMold.getContext());
-            seminarButton.setLayoutParams(seminarLayout);
+            Button seminarButton = new Button(this.getApplicationContext(), null, R.style.Widget_SeminarButton);
             seminarButton.setText(s.getName());
+            seminarButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            seminarButton.setGravity(Gravity.CENTER);
             seminarButton.setBackgroundColor(buttonColor);
             seminarButton.setTextColor(textColor);
             seminarButton.setHeight(semButtonMold.getHeight());
@@ -166,4 +170,15 @@ public class HomeActivity extends Activity {
             linearView.addView(seminarButton);
         }
     }
+
+
+//    private class SeminarButton extends android.support.v7.widget.AppCompatButton {
+//
+//        private final
+//
+//        public SeminarButton(Context context, Seminar s) {
+//            super(context);
+//
+//        }
+//    }
 }
