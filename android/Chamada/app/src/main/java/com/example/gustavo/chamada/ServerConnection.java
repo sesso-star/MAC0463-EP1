@@ -31,6 +31,10 @@ public class ServerConnection extends Activity {
     static private final int MY_TIMEOUT_MS = 7000;
     private static Context myContext;
     private RequestQueue requestQueue;
+    /*
+     * Class singleton.
+     * We need a singleton in this class because a server queue need a context, which should be
+     * the same for all requests once it is set. */
     private static ServerConnection instance = null;
 
 
@@ -46,23 +50,20 @@ public class ServerConnection extends Activity {
         return instance;
     }
 
-
     public RequestQueue getRequestQueue() {
         if (requestQueue == null)
             requestQueue = Volley.newRequestQueue(myContext.getApplicationContext());
         return requestQueue;
     }
 
-
+    /* Modifies every request and adds it to request queue */
     private void addToRequestQueue(Request<String> req) {
         req.setRetryPolicy(new DefaultRetryPolicy(MY_TIMEOUT_MS, 2,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         getRequestQueue().add(req);
     }
 
-    /*
-    * Sends a login request to the server
-    * */
+    /* Sends a login request to the server */
     public void login(Response.Listener<String> responseListener,
                        Response.ErrorListener errorListener,
                        String userType, final Map<String, String> params) {
@@ -78,10 +79,7 @@ public class ServerConnection extends Activity {
         addToRequestQueue(stringRequest);
     }
 
-
-    /*
-    * Sends a register student/teacher request to the server
-    * */
+    /* Sends a register student/teacher request to the server */
     public void singUp(Response.Listener<String> responseListener,
                        Response.ErrorListener errorListener, String userType,
                        final Map<String, String> params) {
@@ -96,10 +94,7 @@ public class ServerConnection extends Activity {
         addToRequestQueue(stringRequest);
     }
 
-
-    /*
-    * Sends a server request for student/teacher info
-    * */
+    /* Sends a server request for student/teacher info */
     public void fetchUser(Response.Listener<String> responseListener,
                           Response.ErrorListener errorListener, String nusp, String userType) {
         String url = serverUrl + "/" + userType + "/get/" + nusp;
@@ -108,9 +103,7 @@ public class ServerConnection extends Activity {
         addToRequestQueue(stringRequest);
     }
 
-
-    /*
-    * Sends a server request for the list of seminars */
+    /* Sends a server request for the list of seminars */
     public void fetchSeminars(Response.Listener<String> responseListener,
                               Response.ErrorListener errorListener) {
         String url = serverUrl + "/seminar";

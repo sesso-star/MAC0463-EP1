@@ -1,104 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/mainBlueish"
+    android:orientation="vertical"
+    android:layout_weight="10"
     android:id="@+id/homeLayout"
     tools:context="com.example.gustavo.chamada.HomeActivity">
-
-    <Button
-        android:id="@+id/changeProfileButton"
-        style="@android:style/Widget.Button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/profile"
-        android:backgroundTint="@color/Yerangish"
-        android:elevation="0dp"
-        android:textColor="@android:color/background_light"
-        android:typeface="normal"
-        app:layout_constraintLeft_toLeftOf="@+id/userNameTextView"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/seminarListView" />
-
-    <Button
-        android:id="@+id/addUserButton"
-        style="@android:style/Widget.Button"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginLeft="15dp"
-        android:background="@drawable/add_user"
-        android:backgroundTint="@color/Yerangish"
-        android:textColor="#FFe240"
-        app:layout_constraintLeft_toRightOf="@+id/changeProfileButton"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/seminarListView" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="2dp"
+        android:layout_weight="4"
         android:text="Bem-vindo (a),"
         android:textColor="@android:color/background_light"
         android:textSize="34sp"
-        app:layout_constraintBottom_toTopOf="@+id/userNameTextView"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/seminarListView" />
+        app:layout_constraintLeft_toLeftOf="@+id/seminarListView"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/userNameTextView"
         android:layout_width="300dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:text="Fulaninho da SIlva"
         android:textColor="@color/Yerangish"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/changeProfileButton"
-        app:layout_constraintLeft_toLeftOf="@+id/textView4" />
+        app:layout_constraintLeft_toLeftOf="@+id/textView4"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/changeProfileButton"
+            style="@android:style/Widget.Button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/profile"
+            android:backgroundTint="@color/Yerangish"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@android:color/background_light"
+            android:typeface="normal"
+            app:layout_constraintLeft_toLeftOf="@+id/userNameTextView"
+            app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
+
+        <Button
+            android:id="@+id/addUserButton"
+            style="@android:style/Widget.Button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/add_user"
+            android:backgroundTint="@color/Yerangish"
+            android:textColor="#FFe240"
+            app:layout_constraintLeft_toRightOf="@+id/changeProfileButton"
+            app:layout_constraintTop_toBottomOf="@+id/userNameTextView" />
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/seminarListView"
-        android:layout_width="327dp"
-        android:layout_height="350dp"
-        android:layout_marginBottom="40dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="50"
+        android:layout_marginBottom="7dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changeProfileButton">
 
         <LinearLayout
             android:id="@+id/seminarList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintLeft_toLeftOf="parent"
             tools:layout_editor_absoluteY="225dp">
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/exampleSemButton"
                 style="@style/Widget.AppCompat.Button"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginEnd="5dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
                 android:background="@color/buttonColor"
                 android:text="seminário\"
                 android:textColor="@android:color/background_light" />
 
+
         </LinearLayout>
     </ScrollView>
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.constraint.Guideline
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guideline"
+        app:layout_constraintGuide_begin="20dp"
+        android:orientation="horizontal" />
+
+</android.widget.LinearLayout>

@@ -1,12 +1,17 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
-import android.support.constraint.ConstraintLayout;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -15,6 +20,9 @@ import com.android.volley.VolleyError;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class HomeActivity extends Activity {
 
@@ -25,7 +33,7 @@ public class HomeActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
         ScreenUtils.enableDisableView(layout, false);
         Button addUserButton = (Button) findViewById(R.id.addUserButton);
         if (!AppUser.getCurrentUser().isProfessor ()) {
@@ -36,21 +44,52 @@ public class HomeActivity extends Activity {
     }
 
 
-    /*
-   *  Listener to server request for getting an user info
-   * */
+    /* Listener to server request for getting an user info */
     private class FetchUserResponseListener implements Response.Listener<String> {
-
-        private String nusp;
-        private String userType;
-
-        public FetchUserResponseListener (String nusp, String userType) {
-            this.nusp = nusp;
-            this.userType = userType;
-        }
 
         @Override
         public void onResponse (String response) {
+            JSONObject obj = null;
+            String name = "";
+            try {
+                obj = new JSONObject(response.toString());
+                JSONObject data = obj.getJSONObject("data");
+                name = data.getString("name");
+                Log.d (myActivityTag, "Name fetched: " + name);
+            }
+            catch (Exception e) {}
+            LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
+            ScreenUtils.enableDisableView(layout, true);
+            TextView userNameT = (TextView) findViewById(R.id.userNameTextView);
+            userNameT.setText(name);
+        }
+    }
+
+    /* This class is used as an error listener for the login request */
+    private class FetchUserErrorListener implements Response.ErrorListener {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            /* Something wrong... go to login screen ?
+            * TODO: put alert message here and go to login screen */
+            LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
+            ScreenUtils.enableDisableView(layout, true);
+        }
+    }
+
+    /* Sends a server request to get user name and sets it on a textview */
+    private void fetchUserName () {
+        User u = AppUser.getCurrentUser();
+        ServerConnection sc = ServerConnection.getInstance(this);
+        sc.fetchUser(new FetchUserResponseListener (), new FetchUserErrorListener(), u.getNusp(),
+                u.getUserType());
+    }
+
+
+    /* Listener to server request for getting an user info */
+    private class FetchSeminarResponseListener implements Response.Listener<String> {
+        @Override
+        public void onResponse(String response) {
             JSONObject respJO = null;
             try {
                 respJO = new JSONObject(response.toString());
@@ -60,63 +99,24 @@ public class HomeActivity extends Activity {
                     String name = seminarJObj.getString("name");
                     String id = seminarJObj.getString("id");
                     Seminar s = new Seminar(id, name);
+                    SeminarList.addSeminar(s);
                 }
             }
             catch (Exception e) {
                 /* TODO: blame server */
                 Log.d (myActivityTag, "Couldn't parse server response");
             }
-            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
-            ScreenUtils.enableDisableView(layout, true);
+            updateSeminarListView();
         }
     }
 
-
-    /*
-    *  This class is used as an error listener for the login request
-    * */
-    private class FetchUserErrorListener implements Response.ErrorListener {
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            /* Something wrong... go to login screen ?
-            * TODO: put alert message here and go to login screen */
-            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
-            ScreenUtils.enableDisableView(layout, true);
-        }
-    }
-
-    private void fetchUserName () {
-        User u = AppUser.getCurrentUser();
-        ServerConnection sc = ServerConnection.getInstance(this);
-        sc.fetchUser(new FetchUserResponseListener (u.getNusp(), u.getUserType()),
-                new FetchUserErrorListener(), u.getNusp(), u.getUserType());
-    }
-
-
-
-    /*
-   *  Listener to server request for getting an user info
-   * */
-    private class FetchSeminarResponseListener implements Response.Listener<String> {
-        @Override
-        public void onResponse(String response) {
-            processSeminarFetch(response);
-            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
-            ScreenUtils.enableDisableView(layout, true);
-            Log.d(myActivityTag, response);
-        }
-    }
-
-    /*
-    *  This class is used as an error listener for the login request
-    * */
+    /* This class is used as an error listener for the login request */
     private class FetchSeminarErrorListener implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             /* Something wrong... go to login screen ?
             * TODO: put alert message here and go to login screen */
-            ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.homeLayout);
+            LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
             ScreenUtils.enableDisableView(layout, true);
             Log.d(myActivityTag, error.toString());
         }
@@ -127,11 +127,40 @@ public class HomeActivity extends Activity {
         sc.fetchSeminars(new FetchSeminarResponseListener(), new FetchSeminarErrorListener());
     }
 
-    private void processSeminarFetch(String s) {
-        JSONObject resJO = null;
-        try {
 
+    /* Callback for updating view whenever you click on a seminar */
+    private class clickSeminarListener implements View.OnClickListener {
+        private Seminar seminar;
+
+        public clickSeminarListener(Seminar s) {
+            this.seminar = s;
         }
-        catch(Exception e) {}
+
+        @Override
+        public void onClick(View v) {
+            // the default action for all lines
+            Log.d(myActivityTag, "Clicou em " + seminar.getName());
+        }
+    }
+
+    /* Updates view with seminars feteched from server */
+    private void updateSeminarListView() {
+        Seminar[] seminars = SeminarList.getSeminarArray();
+        Button semButtonMold = (Button) findViewById(R.id.exampleSemButton);
+        ViewGroup.LayoutParams seminarLayout = semButtonMold.getLayoutParams();
+        LinearLayout linearView = (LinearLayout) findViewById(R.id.seminarList);
+        int textColor = semButtonMold.getCurrentTextColor();
+        int buttonColor = ResourcesCompat.getColor(getResources(), R.color.buttonColor, null);
+        for (int i = 0; i < seminars.length; i++) {
+            Seminar s = seminars[i];
+            Button seminarButton = new Button(this);
+            seminarButton.setLayoutParams(seminarLayout);
+            seminarButton.setText(s.getName());
+            seminarButton.setBackgroundColor(buttonColor);
+            seminarButton.setTextColor(textColor);
+            View.OnClickListener listener = new clickSeminarListener(s);
+            seminarButton.setOnClickListener(listener);
+            linearView.addView(seminarButton);
+        }
     }
 }

@@ -74,11 +74,7 @@ public class LoginActivity extends Activity {
     }
 
 
-    /*
-    *
-    *  This class is used as an error listener for the login request
-    *
-    * */
+    /* This class is used as an error listener for the login request */
     private class LoginErrorListener implements Response.ErrorListener {
 
         @Override

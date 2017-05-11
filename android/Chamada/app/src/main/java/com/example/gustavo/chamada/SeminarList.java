@@ -1,14 +1,12 @@
 package com.example.gustavo.chamada;
-
-import java.sql.Array;
 import java.util.ArrayList;
 
 /**
- * Created by gustavo on 5/10/17.
+ * This class stores every seminar that was fetched from the server. It is static because it should
+ * be the same for every activity
  */
-
 public class SeminarList {
-    public static ArrayList<Seminar> seminarArrayList;
+    public static ArrayList<Seminar> seminarArrayList = new ArrayList<>();
 
     public static void addSeminar(Seminar s) {
         seminarArrayList.add(s);
@@ -19,6 +17,6 @@ public class SeminarList {
     }
 
     public static Seminar[] getSeminarArray() {
-        return (Seminar[]) seminarArrayList.toArray();
+        return seminarArrayList.toArray(new Seminar[seminarArrayList.size()]);
     }
 }
