@@ -51,24 +51,22 @@
         <Button
             android:id="@+id/changeProfileButton"
             style="@android:style/Widget.Button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="0dp"
             android:background="@drawable/profile"
-            android:backgroundTint="@color/Yerangish"
             android:textColor="@android:color/background_light"
             android:typeface="normal" />
 
         <Button
             android:id="@+id/addUserButton"
             style="@android:style/Widget.Button"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:background="@drawable/add_user"
-            android:backgroundTint="@color/Yerangish"
             android:textColor="#FFe240" />
     </LinearLayout>
 
@@ -99,16 +97,6 @@
             android:showDividers="middle"
             app:layout_constraintLeft_toLeftOf="parent"
             tools:layout_editor_absoluteY="225dp">
-
-            <Button
-                android:id="@+id/exampleSemButton"
-                style="@style/Widget.SeminarButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/buttonColor"
-                android:text="alalalalaaaaaaaaa"
-                android:textAlignment="center"
-                android:textColor="@android:color/background_light" />
 
         </LinearLayout>
     </ScrollView>

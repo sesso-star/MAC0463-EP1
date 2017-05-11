@@ -2,32 +2,18 @@ package com.example.gustavo.chamada;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.constraint.solver.widgets.WidgetContainer;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatButton;
-import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class HomeActivity extends Activity {
 
@@ -134,10 +120,10 @@ public class HomeActivity extends Activity {
 
 
     /* Callback for updating view whenever you click on a seminar */
-    private class clickSeminarListener implements View.OnClickListener {
+    private class ClickSeminarListener implements View.OnClickListener {
         private Seminar seminar;
 
-        public clickSeminarListener(Seminar s) {
+        public ClickSeminarListener(Seminar s) {
             this.seminar = s;
         }
 
@@ -148,37 +134,31 @@ public class HomeActivity extends Activity {
         }
     }
 
+
     /* Updates view with seminars feteched from server */
     private void updateSeminarListView() {
         Seminar[] seminars = SeminarList.getSeminarArray();
-        Button semButtonMold = (Button) findViewById(R.id.exampleSemButton);
-        ViewGroup.LayoutParams seminarLayout = semButtonMold.getLayoutParams();
         LinearLayout linearView = (LinearLayout) findViewById(R.id.seminarList);
-        int textColor = semButtonMold.getCurrentTextColor();
-        int buttonColor = ResourcesCompat.getColor(getResources(), R.color.buttonColor, null);
+        linearView.removeAllViews();
         for (int i = 0; i < seminars.length; i++) {
             Seminar s = seminars[i];
-            Button seminarButton = new Button(this.getApplicationContext(), null, R.style.Widget_SeminarButton);
-            seminarButton.setText(s.getName());
-            seminarButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-            seminarButton.setGravity(Gravity.CENTER);
-            seminarButton.setBackgroundColor(buttonColor);
-            seminarButton.setTextColor(textColor);
-            seminarButton.setHeight(semButtonMold.getHeight());
-            View.OnClickListener listener = new clickSeminarListener(s);
-            seminarButton.setOnClickListener(listener);
+            Button seminarButton = new SeminarButton(this, s);
             linearView.addView(seminarButton);
         }
     }
 
 
-//    private class SeminarButton extends android.support.v7.widget.AppCompatButton {
-//
-//        private final
-//
-//        public SeminarButton(Context context, Seminar s) {
-//            super(context);
-//
-//        }
-//    }
+    /* This class defines a button used on the list view of seminars */
+    private class SeminarButton extends android.support.v7.widget.AppCompatButton {
+        public SeminarButton(Context context, Seminar s) {
+            super(context, null, R.style.Widget_SeminarButton);
+            setText(s.getName());
+            setPadding(0, 20, 0, 20);
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            setGravity(Gravity.CENTER);
+            setBackgroundColor(getColor(R.color.seminarButtonColor));
+            setTextColor(getColor(R.color.White));
+            this.setOnClickListener(new ClickSeminarListener(s));
+        }
+    }
 }
