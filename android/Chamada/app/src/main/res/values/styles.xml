@@ -17,4 +17,9 @@
         <item name="android:divider">@drawable/seminar_spacer</item>
         >
     </style>
+
+    <style name="Chamada.DialogBox" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">left</item>
+    </style>
 </resources>

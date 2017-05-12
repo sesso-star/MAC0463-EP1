@@ -2,6 +2,7 @@ package com.example.gustavo.chamada;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -31,9 +32,23 @@ public class HomeActivity extends Activity {
             addUserButton.setVisibility(View.GONE);
         }
         fetchUserName();
-        fetchSeminarLsit();
+        SeminarList.cleanSeminarList();
+        fetchSeminarList();
+
     }
 
+    @Override
+    public void onBackPressed() {
+        AppUser.logOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    /* Callback for add user button. This button only shows if you are a professor user */
+    public void addUser(View view) {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
 
     /* Listener to server request for getting an user info */
     private class FetchUserResponseListener implements Response.Listener<String> {
@@ -43,10 +58,9 @@ public class HomeActivity extends Activity {
             JSONObject obj = null;
             String name = "";
             try {
-                obj = new JSONObject(response.toString());
+                obj = new JSONObject(response);
                 JSONObject data = obj.getJSONObject("data");
                 name = data.getString("name");
-                Log.d (myActivityTag, "Name fetched: " + name);
             }
             catch (Exception e) {}
             LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
@@ -83,7 +97,7 @@ public class HomeActivity extends Activity {
         public void onResponse(String response) {
             JSONObject respJO = null;
             try {
-                respJO = new JSONObject(response.toString());
+                respJO = new JSONObject(response);
                 JSONArray seminarJArray = new JSONArray(respJO.getString("data"));
                 for (int i = 0; i < seminarJArray.length(); i++) {
                     JSONObject seminarJObj = seminarJArray.getJSONObject(i);
@@ -106,18 +120,18 @@ public class HomeActivity extends Activity {
         @Override
         public void onErrorResponse(VolleyError error) {
             /* Something wrong... go to login screen ?
-            * TODO: put alert message here and go to login screen */
+            * TODO: blame server */
             LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
             ScreenUtils.enableDisableView(layout, true);
             Log.d(myActivityTag, error.toString());
         }
     }
 
-    private void fetchSeminarLsit() {
+    /* Fetches seminars from server and populates view with them */
+    private void fetchSeminarList() {
         ServerConnection sc = ServerConnection.getInstance(this);
         sc.fetchSeminars(new FetchSeminarResponseListener(), new FetchSeminarErrorListener());
     }
-
 
     /* Callback for updating view whenever you click on a seminar */
     private class ClickSeminarListener implements View.OnClickListener {
@@ -134,7 +148,6 @@ public class HomeActivity extends Activity {
         }
     }
 
-
     /* Updates view with seminars feteched from server */
     private void updateSeminarListView() {
         Seminar[] seminars = SeminarList.getSeminarArray();
@@ -146,7 +159,6 @@ public class HomeActivity extends Activity {
             linearView.addView(seminarButton);
         }
     }
-
 
     /* This class defines a button used on the list view of seminars */
     private class SeminarButton extends android.support.v7.widget.AppCompatButton {

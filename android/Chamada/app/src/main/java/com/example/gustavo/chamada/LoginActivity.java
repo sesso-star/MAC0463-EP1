@@ -1,27 +1,19 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -133,7 +125,7 @@ public class LoginActivity extends Activity {
             boolean isProfessor = userType.equals("teacher");
             noLoginTextView.setVisibility(View.GONE);
             User u = new User ("", nusp, isProfessor);
-            AppUser.setUser(u);
+            AppUser.logIn(u);
             startHomeActivity();
         }
     }
@@ -148,7 +140,7 @@ public class LoginActivity extends Activity {
 
 
     public void startSignUpActivity (View view) {
-        Intent intent = new Intent(this, SingUp.class);
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 }

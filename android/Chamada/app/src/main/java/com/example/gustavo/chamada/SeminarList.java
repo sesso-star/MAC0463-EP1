@@ -19,4 +19,8 @@ public class SeminarList {
     public static Seminar[] getSeminarArray() {
         return seminarArrayList.toArray(new Seminar[seminarArrayList.size()]);
     }
+
+    public static void cleanSeminarList() {
+        seminarArrayList.clear();
+    }
 }

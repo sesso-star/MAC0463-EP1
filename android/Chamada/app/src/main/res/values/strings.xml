@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Chamada</string>
     <string name="welcome_message">Bem-vindo (a),</string>
+    <string name="successful_signup">Usuário cadastrado com sucesso</string>
+    <string name="ok_message">OK</string>
+    <string name="blame_server">Error no servidor</string>
+    <string name="unsuccessful_signup">Não conseguimos te cadastrar no sistema</string>
+    <string name="no_server_connection">Não conseguimos nos conectar ao servidor</string>
 </resources>

@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,15 +22,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SingUp"
+            android:name=".SignUpActivity"
+            android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gustavo.chamada.LoginActivity" />
         </activity>
         <activity
             android:name=".HomeActivity"
+            android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gustavo.chamada.LoginActivity" />
         </activity>
+        <activity android:name=".RegisterChangeActivity"></activity>
     </application>
 
 </manifest>
