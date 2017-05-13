@@ -57,6 +57,7 @@
             android:layout_marginStart="0dp"
             android:background="@drawable/profile"
             android:textColor="@android:color/background_light"
+            android:onClick="changeProfile"
             android:typeface="normal" />
 
         <Button

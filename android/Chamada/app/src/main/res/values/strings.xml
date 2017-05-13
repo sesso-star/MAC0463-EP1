@@ -6,4 +6,13 @@
     <string name="blame_server">Error no servidor</string>
     <string name="unsuccessful_signup">Não conseguimos te cadastrar no sistema</string>
     <string name="no_server_connection">Não conseguimos nos conectar ao servidor</string>
+    <string name="register_change_title">Alterar Cadastro</string>
+    <string name="change_name_button">Mudar Nome</string>
+    <string name="change_password_button">Mudar senha</string>
+    <string name="change_nusp_button">Mudar Nusp</string>
+    <string name="password_textview">Senha</string>
+    <string name="nusp_textview">Número USP</string>
+    <string name="login_button_text">Entrar</string>
+    <string name="signup_button_text">Cadastrar</string>
+    <string name="cancel_message">Cancelar</string>
 </resources>

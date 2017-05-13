@@ -3,12 +3,24 @@ package com.example.gustavo.chamada;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.Layout;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.nio.charset.Charset;
+
+import static android.R.id.message;
 
 /**
- * Common methods for all views
+ * Common methods for all views related to screen
  */
+
 
 class ScreenUtils {
 
@@ -34,10 +46,58 @@ class ScreenUtils {
 
     static void showMessaDialog(Context context, String message,
                                 DialogInterface.OnClickListener listener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.Chamada_DialogBox);
+        CustomDialogBuilder builder = new CustomDialogBuilder(context);
         builder.setMessage(message);
         builder.setNeutralButton(R.string.ok_message, listener);
         final AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    static void showInputDialog(Context context, String title, EditText inputEditText,
+                                DialogInterface.OnClickListener okListener,
+                                DialogInterface.OnClickListener cancelListener) {
+        CustomDialogBuilder builder = new ScreenUtils.CustomDialogBuilder(context);
+        builder.setTitle(title);
+        builder.addView(inputEditText);
+        builder.setPositiveButton(R.string.ok_message, okListener);
+        builder.setNegativeButton(R.string.cancel_message, cancelListener);
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /* Defines a custom AlertDialog */
+    private static class CustomDialogBuilder extends AlertDialog.Builder {
+
+        private TextView titleTextView = null;
+        private LinearLayout layout = null;
+        private LayoutInflater li;
+
+        CustomDialogBuilder(Context context) {
+            super(context, R.style.Chamada_DialogBox);
+            this.li = LayoutInflater.from(context);
+        }
+
+        private void setView() {
+            if (layout != null)
+                return;
+            View dialogView = li.inflate(R.layout.input_message_dialog, null);
+            this.titleTextView = (TextView) dialogView.findViewById(R.id.title);
+            this.titleTextView.setVisibility(View.GONE);
+            this.layout = (LinearLayout) dialogView.findViewById(R.id.messageDialogLayout);
+            setView(dialogView);
+        }
+
+        @Override
+        public AlertDialog.Builder setTitle(CharSequence title) {
+            setView();
+            titleTextView.setText(title);
+            titleTextView.setVisibility(View.VISIBLE);
+            return this;
+        }
+
+        public void addView(View view) {
+            setView();
+            layout.addView(view, 1);
+        }
     }
 }

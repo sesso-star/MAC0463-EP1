@@ -50,6 +50,12 @@ public class HomeActivity extends Activity {
         startActivity(intent);
     }
 
+    /* Callback for change register */
+    public void changeProfile(View view) {
+        Intent intent = new Intent(this, RegisterChangeActivity.class);
+        startActivity(intent);
+    }
+
     /* Listener to server request for getting an user info */
     private class FetchUserResponseListener implements Response.Listener<String> {
 
