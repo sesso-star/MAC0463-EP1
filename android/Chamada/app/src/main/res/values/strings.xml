@@ -1,18 +1,31 @@
 <resources>
-    <string name="app_name">Chamada</string>
+
+    <!--Home-->
     <string name="welcome_message">Bem-vindo (a),</string>
-    <string name="successful_signup">Usuário cadastrado com sucesso</string>
-    <string name="ok_message">OK</string>
-    <string name="blame_server">Error no servidor</string>
-    <string name="unsuccessful_signup">Não conseguimos te cadastrar no sistema</string>
-    <string name="no_server_connection">Não conseguimos nos conectar ao servidor</string>
-    <string name="register_change_title">Alterar Cadastro</string>
-    <string name="change_name_button">Mudar Nome</string>
-    <string name="change_password_button">Mudar senha</string>
-    <string name="change_nusp_button">Mudar Nusp</string>
+
+    <!--Login-->
     <string name="password_textview">Senha</string>
     <string name="nusp_textview">Número USP</string>
     <string name="login_button_text">Entrar</string>
     <string name="signup_button_text">Cadastrar</string>
+
+    <!--Server Fail-->
+    <string name="no_server_connection">Não conseguimos nos conectar ao servidor</string>
+    <string name="blame_server">Error no servidor</string>
+
+    <!--Sign Up and Change Profile-->
+    <string name="successful_signup">Usuário cadastrado com sucesso</string>
+    <string name="unsuccessful_signup">Não conseguimos te cadastrar no sistema</string>
+    <string name="register_change_title">Alterar Cadastro</string>
+    <string name="change_name_button">Mudar Nome</string>
+    <string name="change_password_button">Mudar senha</string>
+    <string name="change_nusp_button">Mudar Nusp</string>
+    <string name="type_new_name_string">Digite o novo nome do usuário</string>
+    <string name="confirm_password_text">Confirme sua senha</string>
+    <string name="invalid_password">Senha incorreta</string>
+
+    <!--General-->
+    <string name="app_name">Chamada</string>
+    <string name="ok_message">OK</string>
     <string name="cancel_message">Cancelar</string>
 </resources>
