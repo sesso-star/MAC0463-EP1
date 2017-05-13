@@ -34,7 +34,12 @@ public class HomeActivity extends Activity {
         fetchUserName();
         SeminarList.cleanSeminarList();
         fetchSeminarList();
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchUserName();
     }
 
     @Override

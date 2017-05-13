@@ -29,8 +29,12 @@ public class ServerConnection extends Activity {
 
     static private final String serverUrl = "http://207.38.82.139:8001";
     static private final int MY_TIMEOUT_MS = 7000;
+    /* TODO: memory leak*/
+    /* Android studio says there's a memory leak here!*/
     private static Context myContext;
     private RequestQueue requestQueue;
+
+
     /*
      * Class singleton.
      * We need a singleton in this class because a server queue need a context, which should be
@@ -50,11 +54,13 @@ public class ServerConnection extends Activity {
         return instance;
     }
 
+
     public RequestQueue getRequestQueue() {
         if (requestQueue == null)
             requestQueue = Volley.newRequestQueue(myContext.getApplicationContext());
         return requestQueue;
     }
+
 
     /* Modifies every request and adds it to request queue */
     private void addToRequestQueue(Request<String> req) {
@@ -62,6 +68,7 @@ public class ServerConnection extends Activity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         getRequestQueue().add(req);
     }
+
 
     /* Sends a login request to the server */
     public void login(Response.Listener<String> responseListener,
@@ -79,6 +86,7 @@ public class ServerConnection extends Activity {
         addToRequestQueue(stringRequest);
     }
 
+
     /* Sends a register student/teacher request to the server */
     public void singUp(Response.Listener<String> responseListener,
                        Response.ErrorListener errorListener, String userType,
@@ -94,6 +102,7 @@ public class ServerConnection extends Activity {
         addToRequestQueue(stringRequest);
     }
 
+
     /* Sends a server request for student/teacher info */
     public void fetchUser(Response.Listener<String> responseListener,
                           Response.ErrorListener errorListener, String nusp, String userType) {
@@ -102,6 +111,7 @@ public class ServerConnection extends Activity {
                 errorListener);
         addToRequestQueue(stringRequest);
     }
+
 
     /* Sends a server request for the list of seminars */
     public void fetchSeminars(Response.Listener<String> responseListener,
@@ -112,46 +122,20 @@ public class ServerConnection extends Activity {
         addToRequestQueue(stringRequest);
     }
 
-    /*This class implementation is based on the implementation available at:
-    *
-    * http://stackoverflow.com/questions/42508091/volley-stringrequest-headers-block-parameters
-    *
-    * */
-//    private class ParamsStringRequest extends Request<String> {
-//
-//        private Response.Listener<String> listener;
-//        private Map<String, String> params;
-//
-//
-//        public ParamsStringRequest(String url, Map<String, String> params,
-//                                   Response.Listener<String> reponseListener,
-//                                   Response.ErrorListener errorListener, int method) {
-//            super(method, url, errorListener);
-//            this.listener = reponseListener;
-//            this.params = params;
-//        }
-//
-//        @Override
-//        protected void deliverResponse(String response) {
-//            listener.onResponse(response);
-//        }
-//
-//        @Override
-//        protected Map<String, String> getParams() throws AuthFailureError {
-//            return params;
-//        }
-//
-//        @Override
-//        protected Response<String> parseNetworkResponse(NetworkResponse response) {
-//            try {
-//                String jsonString = new String(response.data,
-//                        HttpHeaderParser.parseCharset(response.headers));
-//                return Response.success(new String(jsonString),
-//                        HttpHeaderParser.parseCacheHeaders(response));
-//            } catch (UnsupportedEncodingException e) {
-//                return Response.error(new ParseError(e));
-//            }
-//        }
-//    }
+
+    /* Sends a server request for changing profile */
+    public void updateUserProfile(Response.Listener<String> responseListener,
+                                  Response.ErrorListener errorListener, String userType,
+                                  final Map<String, String> params) {
+        String url = serverUrl + "/" + userType + "/edit";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,responseListener,
+                errorListener) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+        };
+        addToRequestQueue(stringRequest);
+    }
 
 }

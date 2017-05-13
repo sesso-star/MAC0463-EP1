@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONObject;
 
@@ -31,71 +32,70 @@ public class RegisterChangeActivity extends Activity {
     }
 
 
-
-
     public void changeNameClick(View view) {
-        /** Closure  Variables **/
         final Context context = this;
-        final EditText inputText = new EditText(this);
+        final EditText newNameInput =  new EditText(context);
+        final EditText passwordInput = new EditText(context);
+        passwordInput.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        User u = AppUser.getCurrentUser();
+        final String userType = u.getUserType();
+        final Map<String, String> params = new HashMap<String,String>();
+        params.put("nusp", u.getNusp());
 
-
-        /* Listener for succesful login (password confirmation) connection */
-        class LoginResponseListener implements Response.Listener<String> {
+        /* HADOUKEN!
+        *  It may look weird, but it makes a lot of sense, since we define a closure each time
+        *  we go on in the following process:
+        *       typed password -> confirmed user credentials -> typed new name -> server responded
+        * */
+        /* Defines the Listener of password input event */
+        class OnPasswordInput implements AppUser.PasswordConfirmationListener {
             @Override
-            public void onResponse (String response) {
-                JSONObject obj = null;
-                try {
-                    obj = new JSONObject(response);
-                    if (obj.getString("success").equals ("true")) {
-                        /* Successful login*/
-                        inputText.setText("");
-                        ScreenUtils.showMessaDialog(context, "Password confirmed", null);
-                        inputText.setInputType(InputType.TYPE_CLASS_TEXT);
+            public void onConfirmation() {
 
-                    }
-                    else {
-                        String s = context.getString(R.string.invalid_password);
-                        ScreenUtils.showMessaDialog(context, s, null);
-                    }
-                }
-                catch (Exception e) {
-                    String message = context.getString(R.string.no_server_connection);
-                    ScreenUtils.showMessaDialog(context, message, null);
-                    return;
-                }
-            }
-        }
-
-        /* Listener for login (password confirmation) error */
-        class LoginErrorListener implements Response.ErrorListener {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String message = context.getString(R.string.no_server_connection);
-                ScreenUtils.showMessaDialog(context, message, null);
-            }
-        }
-
-        String message = getString(R.string.password_textview);
-        inputText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        ScreenUtils.showInputDialog(RegisterChangeActivity.this, message, inputText,
-                new DialogInterface.OnClickListener() {
+                /* Defines the Listener of password confirmation event */
+                class OnPasswordConfirmation implements DialogInterface.OnClickListener {
                     @Override
+
+                    /* Defines the Listener of new name input */
                     public void onClick(DialogInterface dialog, int which) {
-                        String password = inputText.getText().toString();
+
+                        /* Defines the Listener of profile change server request */
+                        class ProfileUpdateResponseListener implements Response.Listener<String> {
+                            @Override
+                            public void onResponse(String response) {
+                                String message = context.getString(R.string.
+                                        successful_profile_update);
+                                /* TODO: different message when change is not successfull */
+                                ScreenUtils.showMessaDialog(context, message, null);
+                            }
+                        }
+
+                        class ProfileUpdateErrorListener implements Response.ErrorListener {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                String message = context.getString(R.string.no_server_connection);
+                                ScreenUtils.showMessaDialog(context, message, null);
+                            }
+                        }
+
+                        String newName = newNameInput.getText().toString();
+                        params.put("name", newName);
                         ServerConnection sc = ServerConnection.getInstance(context);
-                        String userType = AppUser.getCurrentUser().getUserType();
-                        Map<String, String> params = new HashMap<String,String>();
-                        params.put("nusp", AppUser.getCurrentUser().getNusp());
-                        params.put("pass", password);
-                        sc.login(new LoginResponseListener(), new LoginErrorListener(),
-                                userType, params);
+                        sc.updateUserProfile(new ProfileUpdateResponseListener(),
+                                new ProfileUpdateErrorListener(), userType, params);
                     }
-                },
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        /*do nothing*/
-                        return;
-                    }});
+                }
+
+                /* gets typed password starts listener for password confirmation */
+                String message = context.getString(R.string.type_new_name_string);
+                String password = passwordInput.getText().toString();
+                params.put("pass", password);
+                ScreenUtils.showInputDialog(context, message, newNameInput,
+                        new OnPasswordConfirmation(), null);
+            }
+        }
+
+        /* starts listener for password input */
+        AppUser.confirmPassword(this, passwordInput, new OnPasswordInput());
     }
 }

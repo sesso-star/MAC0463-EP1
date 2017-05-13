@@ -28,4 +28,5 @@
     <string name="app_name">Chamada</string>
     <string name="ok_message">OK</string>
     <string name="cancel_message">Cancelar</string>
+    <string name="successful_profile_update">Cadastro alterado com sucesso</string>
 </resources>
