@@ -148,47 +148,4 @@
 
     </LinearLayout>
 
-    <!--<RadioGroup-->
-    <!--android:layout_width="333dp"-->
-    <!--android:layout_height="52dp"-->
-    <!--android:checkedButton="@+id/rb_female"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:layout_marginBottom="31dp"-->
-    <!--android:layout_marginLeft="35dp"-->
-    <!--android:layout_marginRight="35dp"-->
-    <!--app:layout_constraintBottom_toTopOf="@+id/nuspText"-->
-    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-    <!--app:layout_constraintRight_toRightOf="parent">-->
-
-
-    <!--<RadioButton-->
-    <!--android:id="@+id/alunoCheck"-->
-    <!--style="@style/Widget.AppCompat.CompoundButton.RadioButton"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_weight="1"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_alignParentRight="true"-->
-    <!--android:layout_centerVertical="true"-->
-    <!--android:button="?android:attr/textCheckMark"-->
-    <!--android:checked="true"-->
-    <!--android:text="Aluno"-->
-    <!--android:textAlignment="center" />-->
-
-    <!--<RadioButton-->
-    <!--android:id="@+id/radioButton2"-->
-    <!--style="@style/Widget.AppCompat.CompoundButton.RadioButton"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_weight="1"-->
-    <!--android:layout_alignBottom="@+id/alunoCheck"-->
-    <!--android:layout_alignParentLeft="true"-->
-    <!--android:layout_alignParentStart="true"-->
-    <!--android:button="?android:attr/textCheckMarkInverse"-->
-    <!--android:checked="false"-->
-    <!--android:text="Professor"-->
-    <!--android:textAlignment="center"-->
-    <!--app:buttonTint="@color/warningOrange" />-->
-    <!--</RadioGroup>-->
-
 </android.support.constraint.ConstraintLayout>

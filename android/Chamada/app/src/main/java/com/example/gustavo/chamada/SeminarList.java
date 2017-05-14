@@ -5,10 +5,10 @@ import java.util.ArrayList;
  * This class stores every seminar that was fetched from the server. It is static because it should
  * be the same for every activity
  */
-public class SeminarList {
-    public static ArrayList<Seminar> seminarArrayList = new ArrayList<>();
+class SeminarList {
+    private static ArrayList<Seminar> seminarArrayList = new ArrayList<>();
 
-    public static void addSeminar(Seminar s) {
+    static void addSeminar(Seminar s) {
         seminarArrayList.add(s);
     }
 
@@ -16,11 +16,11 @@ public class SeminarList {
         seminarArrayList.remove(s);
     }
 
-    public static Seminar[] getSeminarArray() {
+    static Seminar[] getSeminarArray() {
         return seminarArrayList.toArray(new Seminar[seminarArrayList.size()]);
     }
 
-    public static void cleanSeminarList() {
+    static void cleanSeminarList() {
         seminarArrayList.clear();
     }
 }

@@ -1,7 +1,7 @@
 package com.example.gustavo.chamada;
 
 /* Defines the app User */
-public class User {
+class User {
     private String name;
     private String nusp;
     private boolean isProfessor;
@@ -14,7 +14,7 @@ public class User {
     }
 
 
-    public User(String name, String nusp, boolean isProfessor) {
+    User(String name, String nusp, boolean isProfessor) {
         this.name = name;
         this.nusp = nusp;
         this.isProfessor = isProfessor;
@@ -35,15 +35,15 @@ public class User {
         this.nusp = nusp;
     }
 
-    public String getNusp() {
+    String getNusp() {
         return this.nusp;
     }
 
-    public boolean isProfessor() {
+    boolean isProfessor() {
         return this.isProfessor;
     }
 
-    public String getUserType() {
+    String getUserType() {
         if (isProfessor())
             return "teacher";
         else

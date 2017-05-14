@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,8 +19,6 @@ import java.util.Map;
 
 
 public class LoginActivity extends Activity {
-
-    private static final String myActivityTag = "LOGIN_ACTIVITY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +50,7 @@ public class LoginActivity extends Activity {
         private String password;
         private String userType;
 
-        public LoginResponseListener (String nusp, String pass, String userType) {
+        LoginResponseListener(String nusp, String pass, String userType) {
             this.nusp = nusp;
             this.password = pass;
             this.userType = userType;
@@ -74,14 +71,13 @@ public class LoginActivity extends Activity {
             TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
             ScreenUtils.enableDisableView(layout, true);
-            Log.d(myActivityTag, "Error! " + error.getMessage());
-            noLoginTextView.setText("Não conseguimos nos conectar :(");
+            noLoginTextView.setText(getString(R.string.no_server_connection));
             noLoginTextView.setVisibility(View.VISIBLE);
         }
     }
 
     private void postLogin(final String nusp, final String password, final String userType)  {
-        Map<String, String> params = new HashMap<String,String>();
+        Map<String, String> params = new HashMap<>();
         params.put("nusp", nusp);
         params.put("pass", password);
         ServerConnection sc = ServerConnection.getInstance(this);
@@ -97,7 +93,7 @@ public class LoginActivity extends Activity {
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
         ScreenUtils.enableDisableView(layout, true);
         int authorized;
-        JSONObject obj = null;
+        JSONObject obj;
         try {
             obj = new JSONObject(response);
             if (obj.getString("success").equals ("true"))
@@ -106,9 +102,8 @@ public class LoginActivity extends Activity {
                 authorized = 0;
         }
         catch (Exception e) {
-            noLoginTextView.setText("Err... erro no servidor!");
+            noLoginTextView.setText(getString(R.string.blame_server));
             noLoginTextView.setVisibility(View.VISIBLE);
-            Log.d (myActivityTag, "Couldn't parse server response");
             return;
         }
 
@@ -117,7 +112,7 @@ public class LoginActivity extends Activity {
                 // try again as a student...
                 postLogin(nusp, password, "student");
             else {
-                noLoginTextView.setText("Usuário ou Senha incorreta!");
+                noLoginTextView.setText(getString(R.string.invalid_credential));
                 noLoginTextView.setVisibility(View.VISIBLE);
                 signupButton.setVisibility(View.VISIBLE);
             }

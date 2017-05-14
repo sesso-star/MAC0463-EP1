@@ -1,12 +1,10 @@
 package com.example.gustavo.chamada;
 
-import org.json.JSONObject;
-
 /**
  * Class used to store a seminar
  */
 
-public class Seminar {
+class Seminar {
     private String name;
     private int id;
 
@@ -18,11 +16,6 @@ public class Seminar {
     Seminar(int id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    Seminar(JSONObject o) {
-        /* TODO: implement this constructor */
-        return;
     }
 
     void setName(String name) {

@@ -40,7 +40,7 @@
                 android:value="com.example.gustavo.chamada.LoginActivity" />
         </activity>
         <activity
-            android:name=".RegisterChangeActivity"
+            android:name=".ProfileActivity"
             android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar">

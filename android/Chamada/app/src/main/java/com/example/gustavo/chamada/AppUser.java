@@ -1,21 +1,9 @@
 package com.example.gustavo.chamada;
 
-import android.app.Application;
+
 import android.content.Context;
 import android.content.DialogInterface;
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.drm.DrmManagerClient;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.media.MediaBrowserCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,36 +18,35 @@ class AppUser {
 
     private static User currentUser;
 
-    public static void logIn(User usr) {
+    static void logIn(User usr) {
         currentUser = usr;
     }
 
-    public static void logOut() {
+    static void logOut() {
         currentUser = null;
     }
 
-    public static User getCurrentUser() {
+    static User getCurrentUser() {
         return currentUser;
     }
 
-    public static boolean hasLoggedInUser() {
+    static boolean hasLoggedInUser() {
         return currentUser != null;
     }
 
-    public interface PasswordConfirmationListener {
+    interface PasswordConfirmationListener {
         void onConfirmation();
     }
 
-    public static void confirmPassword(Context c, final EditText inputText,
-                                       final PasswordConfirmationListener listener) {
-        /** Closure  Variables **/
+    static void confirmPassword(Context c, final EditText inputText,
+                                final PasswordConfirmationListener listener) {
         final Context context = c;
 
         /* Listener for successful login (password confirmation) connection */
         class LoginResponseListener implements Response.Listener<String> {
             @Override
             public void onResponse (String response) {
-                JSONObject obj = null;
+                JSONObject obj;
                 try {
                     obj = new JSONObject(response);
                     if (obj.getString("success").equals ("true")) {
@@ -74,7 +61,6 @@ class AppUser {
                 catch (Exception e) {
                     String message = context.getString(R.string.no_server_connection);
                     ScreenUtils.showMessaDialog(context, message, null);
-                    return;
                 }
             }
         }
@@ -88,7 +74,8 @@ class AppUser {
             }
         }
 
-        String message = context.getString(R.string.password_textview);
+        String message;
+        message = context.getString(R.string.password_textview);
         ScreenUtils.showInputDialog(context, message, inputText,
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -96,7 +83,7 @@ class AppUser {
                         String password = inputText.getText().toString();
                         ServerConnection sc = ServerConnection.getInstance(context);
                         String userType = AppUser.getCurrentUser().getUserType();
-                        Map<String, String> params = new HashMap<String,String>();
+                        Map<String, String> params = new HashMap<>();
                         params.put("nusp", AppUser.getCurrentUser().getNusp());
                         params.put("pass", password);
                         sc.login(new LoginResponseListener(), new LoginErrorListener(),
@@ -107,7 +94,6 @@ class AppUser {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         /*do nothing*/
-                        return;
                     }});
     }
 }

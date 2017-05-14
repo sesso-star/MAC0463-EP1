@@ -21,8 +21,6 @@ import java.util.Map;
 
 public class SignUpActivity extends Activity {
 
-    private static final String myActivityTag = "SIGN_UP";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +50,7 @@ public class SignUpActivity extends Activity {
         public void onResponse (final String response) {
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.singUpLayout);
             ScreenUtils.enableDisableView(layout, true);
-            proccessSignUpResponse(response, nusp, password, userType);
+            proccessSignUpResponse(response, nusp, userType);
         }
     }
 
@@ -81,7 +79,7 @@ public class SignUpActivity extends Activity {
         RadioGroup userTypeGroup = (RadioGroup) findViewById(R.id.userTypeRadioGroup);
         RadioButton studentRadio = (RadioButton) findViewById(R.id.studentCheck);
         int radioButtonID = userTypeGroup.getCheckedRadioButtonId();
-        String userType = "";
+        String userType;
         if (radioButtonID == studentRadio.getId())
             userType = "student";
         else
@@ -93,7 +91,7 @@ public class SignUpActivity extends Activity {
     /* Calls server connection for signing up */
     public void postSignUp (final String name, final String nusp, final String pass, final String
             userType) {
-        Map<String, String> params = new HashMap<String,String>();
+        Map<String, String> params = new HashMap<>();
         params.put("nusp", nusp);
         params.put("name", name);
         params.put("pass", pass);
@@ -106,19 +104,14 @@ public class SignUpActivity extends Activity {
 
 
     /* Updates app after succesful user sign up */
-    private void proccessSignUpResponse (String response, final String nusp, String password,
+    private void proccessSignUpResponse (String response, final String nusp,
                                          final String userType) {
         Button signupButton = (Button) findViewById(R.id.signUpButton);
-        JSONObject obj = null;
+        JSONObject obj;
         Boolean success;
         try {
-            obj = new JSONObject(response.toString());
-            if (obj.getString("success").equals ("true")) {
-                success = true;
-            }
-            else {
-                success = false;
-            }
+            obj = new JSONObject(response);
+            success = obj.getString("success").equals("true");
         }
         catch (Exception e) {
             success = false;

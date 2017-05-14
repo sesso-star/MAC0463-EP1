@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -65,7 +66,7 @@ public class HomeActivity extends Activity {
 
     /* Callback for change register */
     public void changeProfile(View view) {
-        Intent intent = new Intent(this, RegisterChangeActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 
@@ -93,9 +94,22 @@ public class HomeActivity extends Activity {
                 class OnSeminarAddition implements Response.Listener<String> {
                     @Override
                     public void onResponse(String response) {
-                        /* TODO: verify if successful */
-                        String message = getString(R.string.successful_seminar_addition);
+                        JSONObject obj;
+                        String message;
+                        try {
+                            obj = new JSONObject(response);
+                            if (obj.getString("success").equals ("true")) {
+                                message = context.getString(R.string.successful_seminar_addition);
+                            }
+                            else {
+                                message = context.getString(R.string.unsuccessful_seminar_addition);
+                            }
+                        } catch (JSONException e) {
+                            message = context.getString(R.string.blame_server);
+                        }
                         ScreenUtils.showMessaDialog(context, message, null);
+                        SeminarList.cleanSeminarList();
+                        fetchSeminarList();
                     }
                 }
 
@@ -116,98 +130,103 @@ public class HomeActivity extends Activity {
         ScreenUtils.showInputDialog(this, message,seminarNameInput, new OnSeminarInput(), null);
     }
 
-    /* Listener to server request for getting an user info */
-    private class FetchUserResponseListener implements Response.Listener<String> {
-
-        @Override
-        public void onResponse (String response) {
-            JSONObject obj = null;
-            String name = "";
-            try {
-                obj = new JSONObject(response);
-                JSONObject data = obj.getJSONObject("data");
-                name = data.getString("name");
-            }
-            catch (Exception e) {
-                /* TODO: blame server */
-            }
-            TextView userNameT = (TextView) findViewById(R.id.userNameTextView);
-            userNameT.setText(name);
-            User u = AppUser.getCurrentUser();
-            u.setName(name);
-        }
-    }
-
-    /* This class is used as an error listener for the login request */
-    private class FetchUserErrorListener implements Response.ErrorListener {
-
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            /* Something wrong... go to login screen ?
-            * TODO: put alert message here and go to login screen */
-        }
-    }
 
     /* Sends a server request to get user name and sets it on a textview */
     private void fetchUserName () {
+        final Context context = this;
+        final TextView userNameT = (TextView) findViewById(R.id.userNameTextView);
+
+        /* Listener to server request for getting an user info */
+        class FetchUserResponseListener implements Response.Listener<String> {
+            @Override
+            public void onResponse (String response) {
+                JSONObject obj;
+                String name = "";
+                try {
+                    obj = new JSONObject(response);
+                    JSONObject data = obj.getJSONObject("data");
+                    name = data.getString("name");
+                }
+                catch (Exception e) {
+                    String message = getString(R.string.blame_server);
+                    ScreenUtils.showMessaDialog(context, message, null);
+                }
+                userNameT.setText(name);
+                User u = AppUser.getCurrentUser();
+                u.setName(name);
+            }
+        }
+
+        /* Listener for error in fetch user request */
+        class FetchUserErrorListener implements Response.ErrorListener {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = getString(R.string.no_server_connection);
+                ScreenUtils.showMessaDialog(context, message, null);
+            }
+        }
+
         User u = AppUser.getCurrentUser();
         if (u.getName() == null || u.getName().equals("")) {
             ServerConnection sc = ServerConnection.getInstance(this);
             sc.fetchUser(new FetchUserResponseListener(), new FetchUserErrorListener(), u.getNusp(),
                     u.getUserType());
         }
+        else if  (!u.getName().equals(userNameT.getText())) {
+            userNameT.setText(u.getName());
+        }
         LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
         ScreenUtils.enableDisableView(layout, true);
     }
 
 
-    /* Listener to server request for getting an user info */
-    private class FetchSeminarResponseListener implements Response.Listener<String> {
-        @Override
-        public void onResponse(String response) {
-            JSONObject respJO = null;
-            try {
-                respJO = new JSONObject(response);
-                JSONArray seminarJArray = new JSONArray(respJO.getString("data"));
-                for (int i = 0; i < seminarJArray.length(); i++) {
-                    JSONObject seminarJObj = seminarJArray.getJSONObject(i);
-                    String name = seminarJObj.getString("name");
-                    String id = seminarJObj.getString("id");
-                    Seminar s = new Seminar(id, name);
-                    SeminarList.addSeminar(s);
-                }
-            }
-            catch (Exception e) {
-                /* TODO: blame server */
-                Log.d (myActivityTag, "Couldn't parse server response");
-            }
-            updateSeminarListView();
-        }
-    }
-
-    /* This class is used as an error listener for the login request */
-    private class FetchSeminarErrorListener implements Response.ErrorListener {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            /* Something wrong... go to login screen ?
-            * TODO: blame server */
-            LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
-            ScreenUtils.enableDisableView(layout, true);
-            Log.d(myActivityTag, error.toString());
-        }
-    }
-
     /* Fetches seminars from server and populates view with them */
     private void fetchSeminarList() {
+        final Context context = this;
+
+        /* Listener to server request for getting seminar list */
+        class FetchSeminarResponseListener implements Response.Listener<String> {
+            @Override
+            public void onResponse(String response) {
+                JSONObject respJO;
+                try {
+                    respJO = new JSONObject(response);
+                    JSONArray seminarJArray = new JSONArray(respJO.getString("data"));
+                    for (int i = 0; i < seminarJArray.length(); i++) {
+                        JSONObject seminarJObj = seminarJArray.getJSONObject(i);
+                        String name = seminarJObj.getString("name");
+                        String id = seminarJObj.getString("id");
+                        Seminar s = new Seminar(id, name);
+                        SeminarList.addSeminar(s);
+                    }
+                }
+                catch (Exception e) {
+                    String message = getString(R.string.no_server_connection);
+                    ScreenUtils.showMessaDialog(context, message, null);
+                }
+                updateSeminarListView();
+            }
+        }
+
+        /* Error listener to server request for getting seminar list */
+        class FetchSeminarErrorListener implements Response.ErrorListener {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = getString(R.string.no_server_connection);
+                ScreenUtils.showMessaDialog(context, message, null);
+            }
+        }
+
         ServerConnection sc = ServerConnection.getInstance(this);
         sc.fetchSeminars(new FetchSeminarResponseListener(), new FetchSeminarErrorListener());
     }
+
 
     /* Callback for updating view whenever you click on a seminar */
     private class ClickSeminarListener implements View.OnClickListener {
         private Seminar seminar;
 
-        public ClickSeminarListener(Seminar s) {
+        ClickSeminarListener(Seminar s) {
             this.seminar = s;
         }
 
@@ -218,17 +237,18 @@ public class HomeActivity extends Activity {
         }
     }
 
+
     /* Updates view with seminars feteched from server */
     private void updateSeminarListView() {
         Seminar[] seminars = SeminarList.getSeminarArray();
         LinearLayout linearView = (LinearLayout) findViewById(R.id.seminarList);
         linearView.removeAllViews();
-        for (int i = 0; i < seminars.length; i++) {
-            Seminar s = seminars[i];
+        for (Seminar s : seminars) {
             Button seminarButton = new SeminarButton(this, s);
             linearView.addView(seminarButton);
         }
     }
+
 
     /* This class defines a button used on the list view of seminars */
     private class SeminarButton extends android.support.v7.widget.AppCompatButton {

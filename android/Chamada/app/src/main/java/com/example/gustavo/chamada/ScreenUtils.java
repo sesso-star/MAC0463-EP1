@@ -3,19 +3,12 @@ package com.example.gustavo.chamada;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.Layout;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.nio.charset.Charset;
-
-import static android.R.id.message;
 
 /**
  * Common methods for all views related to screen
@@ -95,7 +88,7 @@ class ScreenUtils {
             return this;
         }
 
-        public void addView(View view) {
+        void addView(View view) {
             setView();
             layout.addView(view, 1);
         }

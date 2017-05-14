@@ -33,7 +33,7 @@
         android:layout_weight="2"
         android:foregroundGravity="center"
         android:gravity="center"
-        android:text="Fulaninho da Silva"
+        android:text=""
         android:textColor="@color/Yerangish"
         android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="@+id/textView4"

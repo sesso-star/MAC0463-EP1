@@ -34,4 +34,11 @@
     <string name="successful_profile_update">Cadastro alterado com sucesso</string>
     <string name="type_seminar_name">Digite o nome do seminário</string>
     <string name="successful_seminar_addition">Seminário adicionado</string>
+    <string name="profile_title">Seu Perfil</string>
+    <string name="logout_text">Sair</string>
+    <string name="invalid_credential">Senha ou usuário inválidos</string>
+    <string name="professor">Professor</string>
+    <string name="student">Aluno</string>
+    <string name="unsuccessful_profile_update">Não foi possível atualizar seu perfil</string>
+    <string name="unsuccessful_seminar_addition">Não conseguimos adicionar o seminário</string>
 </resources>

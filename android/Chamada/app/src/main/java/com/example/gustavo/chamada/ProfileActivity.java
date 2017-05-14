@@ -10,17 +10,19 @@ import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterChangeActivity extends Activity {
-
-    private static final String myActivityTag = "SIGN_UP";
+public class ProfileActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_change);
+        setContentView(R.layout.activity_profile);
     }
 
 
@@ -74,9 +76,9 @@ public class RegisterChangeActivity extends Activity {
         final EditText passwordInput = new EditText(context);
         passwordInput.
                 setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        User u = AppUser.getCurrentUser();
+        final User u = AppUser.getCurrentUser();
         final String userType = u.getUserType();
-        final Map<String, String> params = new HashMap<String,String>();
+        final Map<String, String> params = new HashMap<>();
         params.put("nusp", u.getNusp());
         params.put("name", u.getNusp());
 
@@ -110,15 +112,28 @@ public class RegisterChangeActivity extends Activity {
 
     /* Asks ServerConnection for a request for profile change */
     private void sendProfileChange (final Context context, String userType,
-                                    Map<String, String> params) {
-        User u = AppUser.getCurrentUser();
+                                    final Map<String, String> params) {
+        final User u = AppUser.getCurrentUser();
         /* Defines the Listeners of profile change server request */
         class ProfileUpdateResponseListener implements Response.Listener<String> {
             @Override
             public void onResponse(String response) {
-                String message = context.getString(R.string.
-                        successful_profile_update);
-                                /* TODO: different message when change is not successfull */
+                String message;
+                JSONObject obj;
+                try {
+                    obj = new JSONObject(response);
+                    if (obj.getString("success").equals ("true")) {
+                        u.setName(params.get("name"));
+                        u.setNusp(params.get("nusp"));
+                        AppUser.logIn(u);
+                        message = context.getString(R.string.successful_profile_update);
+                    }
+                    else {
+                        message = context.getString(R.string.unsuccessful_profile_update);
+                    }
+                } catch (JSONException e) {
+                    message = context.getString(R.string.blame_server);
+                }
                 ScreenUtils.showMessaDialog(context, message, null);
             }
         }
