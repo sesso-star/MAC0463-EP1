@@ -40,11 +40,11 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_weight="8"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -56,8 +56,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginStart="0dp"
             android:background="@drawable/profile"
-            android:textColor="@android:color/background_light"
             android:onClick="changeProfile"
+            android:textColor="@android:color/background_light"
             android:typeface="normal" />
 
         <Button
@@ -70,6 +70,23 @@
             android:background="@drawable/add_user"
             android:onClick="addUser"
             android:textColor="#FFe240" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:gravity="end|center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/confirmPresence"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:onClick="qrCodeClick"
+                android:background="@drawable/qr_code" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <RelativeLayout
@@ -108,12 +125,13 @@
 
         <Button
             android:id="@+id/addSeminarButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@android:drawable/ic_input_add" />
+            android:background="@android:drawable/ic_input_add"
+            android:backgroundTint="@color/Yerangish" />
 
     </RelativeLayout>
 

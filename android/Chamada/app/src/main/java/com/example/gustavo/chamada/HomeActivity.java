@@ -61,6 +61,10 @@ public class HomeActivity extends Activity {
         startActivity(intent);
     }
 
+    /* Callback for presence confirmation using qr code */
+    public void qrCodeClick(View view) {
+    }
+
     /* Listener to server request for getting an user info */
     private class FetchUserResponseListener implements Response.Listener<String> {
 

@@ -3,22 +3,13 @@ package com.example.gustavo.chamada;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.v4.media.MediaBrowserCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 

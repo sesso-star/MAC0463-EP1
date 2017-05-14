@@ -3,11 +3,11 @@
     <color name="colorPrimary">#f4ffd5</color>
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#ff4081</color>
-    <color name="mainBlueish">#006d8f</color>
+    <color name="mainBlueish">#004256</color>
     <color name="seminarButtonColor">#4b00536c</color>
-    <color name="warningOrange">#ff8026</color>
-    <color name="buttonColor">#11ffffff</color>
-    <color name="Yerangish">#ffda94</color>
+    <color name="warningOrange">#f88738</color>
+    <color name="buttonColor">#ff9900</color>
+    <color name="Yerangish">#ffe240</color>
     <color name="White">#ffffff</color>
     <color name="DarkBlueish">#272458</color>
 </resources>
