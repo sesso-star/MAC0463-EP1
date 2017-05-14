@@ -74,10 +74,10 @@ public class HomeActivity extends Activity {
                 name = data.getString("name");
             }
             catch (Exception e) {}
-            LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
-            ScreenUtils.enableDisableView(layout, true);
             TextView userNameT = (TextView) findViewById(R.id.userNameTextView);
             userNameT.setText(name);
+            User u = AppUser.getCurrentUser();
+            u.setName(name);
         }
     }
 
@@ -88,17 +88,19 @@ public class HomeActivity extends Activity {
         public void onErrorResponse(VolleyError error) {
             /* Something wrong... go to login screen ?
             * TODO: put alert message here and go to login screen */
-            LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
-            ScreenUtils.enableDisableView(layout, true);
         }
     }
 
     /* Sends a server request to get user name and sets it on a textview */
     private void fetchUserName () {
         User u = AppUser.getCurrentUser();
-        ServerConnection sc = ServerConnection.getInstance(this);
-        sc.fetchUser(new FetchUserResponseListener (), new FetchUserErrorListener(), u.getNusp(),
-                u.getUserType());
+        if (u.getName() == null || u.getName().equals("")) {
+            ServerConnection sc = ServerConnection.getInstance(this);
+            sc.fetchUser(new FetchUserResponseListener(), new FetchUserErrorListener(), u.getNusp(),
+                    u.getUserType());
+        }
+        LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
+        ScreenUtils.enableDisableView(layout, true);
     }
 
 

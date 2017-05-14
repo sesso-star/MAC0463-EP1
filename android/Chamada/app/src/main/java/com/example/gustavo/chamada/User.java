@@ -27,7 +27,7 @@ public class User {
 
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
 
@@ -36,7 +36,7 @@ public class User {
     }
 
     public String getNusp() {
-        return nusp;
+        return this.nusp;
     }
 
     public boolean isProfessor() {

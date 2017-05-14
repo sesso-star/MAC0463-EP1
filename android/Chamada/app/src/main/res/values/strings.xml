@@ -20,12 +20,15 @@
     <string name="change_name_button">Mudar Nome</string>
     <string name="change_password_button">Mudar senha</string>
     <string name="change_nusp_button">Mudar Nusp</string>
-    <string name="type_new_name_string">Digite o novo nome do usuário</string>
+    <string name="type_new_name_string">Digite o novo nome</string>
+    <string name="type_new_password_string">Digite a nova senha</string>
     <string name="confirm_password_text">Confirme sua senha</string>
     <string name="invalid_password">Senha incorreta</string>
 
     <!--General-->
     <string name="app_name">Chamada</string>
+    <string name="name">Nome</string>
+    <string name="password">Senha</string>
     <string name="ok_message">OK</string>
     <string name="cancel_message">Cancelar</string>
     <string name="successful_profile_update">Cadastro alterado com sucesso</string>
