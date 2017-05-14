@@ -32,4 +32,6 @@
     <string name="ok_message">OK</string>
     <string name="cancel_message">Cancelar</string>
     <string name="successful_profile_update">Cadastro alterado com sucesso</string>
+    <string name="type_seminar_name">Digite o nome do seminário</string>
+    <string name="successful_seminar_addition">Seminário adicionado</string>
 </resources>

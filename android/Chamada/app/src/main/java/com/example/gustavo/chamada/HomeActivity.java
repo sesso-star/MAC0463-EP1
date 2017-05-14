@@ -1,7 +1,9 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,12 +11,16 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeActivity extends Activity {
 
@@ -28,8 +34,10 @@ public class HomeActivity extends Activity {
         LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
         ScreenUtils.enableDisableView(layout, false);
         Button addUserButton = (Button) findViewById(R.id.addUserButton);
+        Button addSeminarButton = (Button) findViewById(R.id.addSeminarButton);
         if (!AppUser.getCurrentUser().isProfessor ()) {
             addUserButton.setVisibility(View.GONE);
+            addSeminarButton.setVisibility(View.GONE);
         }
         fetchUserName();
         SeminarList.cleanSeminarList();
@@ -61,8 +69,51 @@ public class HomeActivity extends Activity {
         startActivity(intent);
     }
 
+
     /* Callback for presence confirmation using qr code */
+    /* TODO: */
     public void qrCodeClick(View view) {
+    }
+
+
+    /* Callback for adding a Seminar */
+    public void addSeminarClick(View view) {
+        final Context context = this;
+        final EditText seminarNameInput = new EditText(context);
+        final Map<String, String> params = new HashMap<>();
+
+        /* Defines the Listener of seminar name input event */
+        class OnSeminarInput implements AlertDialog.OnClickListener {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String seminarName = seminarNameInput.getText().toString();
+                params.put("name", seminarName);
+                ServerConnection sc = ServerConnection.getInstance(context);
+
+                class OnSeminarAddition implements Response.Listener<String> {
+                    @Override
+                    public void onResponse(String response) {
+                        /* TODO: verify if successful */
+                        String message = getString(R.string.successful_seminar_addition);
+                        ScreenUtils.showMessaDialog(context, message, null);
+                    }
+                }
+
+                class OnError implements Response.ErrorListener {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String message = getString(R.string.no_server_connection);
+                        ScreenUtils.showMessaDialog(context, message, null);
+                    }
+                }
+
+                sc.addSerminar(new OnSeminarAddition(), new OnError(), params);
+            }
+        }
+
+        /* shows input dialog message */
+        String message = getString(R.string.type_seminar_name);
+        ScreenUtils.showInputDialog(this, message,seminarNameInput, new OnSeminarInput(), null);
     }
 
     /* Listener to server request for getting an user info */
@@ -77,7 +128,9 @@ public class HomeActivity extends Activity {
                 JSONObject data = obj.getJSONObject("data");
                 name = data.getString("name");
             }
-            catch (Exception e) {}
+            catch (Exception e) {
+                /* TODO: blame server */
+            }
             TextView userNameT = (TextView) findViewById(R.id.userNameTextView);
             userNameT.setText(name);
             User u = AppUser.getCurrentUser();

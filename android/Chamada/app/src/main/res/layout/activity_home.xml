@@ -131,7 +131,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:background="@android:drawable/ic_input_add"
-            android:backgroundTint="@color/Yerangish" />
+            android:backgroundTint="@color/Yerangish"
+            android:onClick="addSeminarClick" />
 
     </RelativeLayout>
 

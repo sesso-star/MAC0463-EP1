@@ -128,7 +128,7 @@ public class ServerConnection extends Activity {
                                   Response.ErrorListener errorListener, String userType,
                                   final Map<String, String> params) {
         String url = serverUrl + "/" + userType + "/edit";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,responseListener,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
                 errorListener) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -138,4 +138,19 @@ public class ServerConnection extends Activity {
         addToRequestQueue(stringRequest);
     }
 
+
+    /* Sends a server request for adding a seminar */
+    public void addSerminar(Response.Listener<String> responseListener,
+                            Response.ErrorListener errorListener,
+                            final Map<String, String> params) {
+        String url = serverUrl + "/seminar/add";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
+                errorListener) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+        };
+        addToRequestQueue(stringRequest);
+    }
 }
