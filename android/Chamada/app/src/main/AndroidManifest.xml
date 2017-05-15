@@ -8,7 +8,7 @@
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -28,7 +28,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
@@ -66,12 +66,24 @@
             android:theme="@android:style/Theme.NoTitleBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.gustavo.chamada.LoginActivity" />
+                android:value="com.example.gustavo.chamada.HomeActivity" />
         </activity>
-        <activity android:name=".QRScannerActivity"
+        <activity
+            android:name=".QRScannerActivity"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gustavo.chamada.HomeActivity" />
+        </activity>
+        <activity android:name=".SeminarActivity"
+            android:parentActivityName=".HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gustavo.chamada.HomeActivity" />
         </activity>
     </application>
 

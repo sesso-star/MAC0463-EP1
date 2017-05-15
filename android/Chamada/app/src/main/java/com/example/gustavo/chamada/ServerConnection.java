@@ -153,4 +153,14 @@ public class ServerConnection extends Activity {
         };
         addToRequestQueue(stringRequest);
     }
+
+
+    /* Sends a server request for seminar details */
+    public void fetchSeminarInfo(Response.Listener<String> responseListener,
+                                 Response.ErrorListener errorListener, String id) {
+        String url = serverUrl + "/seminar/get/" + id;
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, responseListener,
+                errorListener);
+        addToRequestQueue(stringRequest);
+    }
 }

@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,7 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import org.json.JSONArray;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,6 +23,8 @@ import java.util.Map;
 public class HomeActivity extends Activity {
 
     private static final String myActivityTag = "HOME_ACTIVITY";
+    /* Contains all seminars available in the server */
+    private static SeminarList homeSeminarList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +40,6 @@ public class HomeActivity extends Activity {
             addSeminarButton.setVisibility(View.GONE);
         }
         fetchUserName();
-        SeminarList.cleanSeminarList();
         fetchSeminarList();
     }
 
@@ -109,7 +107,6 @@ public class HomeActivity extends Activity {
                             message = context.getString(R.string.blame_server);
                         }
                         ScreenUtils.showMessaDialog(context, message, null);
-                        SeminarList.cleanSeminarList();
                         fetchSeminarList();
                     }
                 }
@@ -192,20 +189,13 @@ public class HomeActivity extends Activity {
                 JSONObject respJO;
                 try {
                     respJO = new JSONObject(response);
-                    JSONArray seminarJArray = new JSONArray(respJO.getString("data"));
-                    for (int i = 0; i < seminarJArray.length(); i++) {
-                        JSONObject seminarJObj = seminarJArray.getJSONObject(i);
-                        String name = seminarJObj.getString("name");
-                        String id = seminarJObj.getString("id");
-                        Seminar s = new Seminar(id, name);
-                        SeminarList.addSeminar(s);
-                    }
+                    homeSeminarList = new SeminarList(respJO);
+                    updateSeminarListView();
                 }
                 catch (Exception e) {
-                    String message = getString(R.string.no_server_connection);
+                    String message = getString(R.string.blame_server);
                     ScreenUtils.showMessaDialog(context, message, null);
                 }
-                updateSeminarListView();
             }
         }
 
@@ -224,44 +214,45 @@ public class HomeActivity extends Activity {
 
 
     /* Callback for updating view whenever you click on a seminar */
-    private class ClickSeminarListener implements View.OnClickListener {
-        private Seminar seminar;
+    private class SeminarClickListener implements View.OnClickListener {
+        Seminar seminar;
+        Context context;
 
-        ClickSeminarListener(Seminar s) {
+        SeminarClickListener(Context c, Seminar s) {
+            this.context = c;
             this.seminar = s;
         }
 
         @Override
-        public void onClick(View v) {
-            // the default action for all lines
-            Log.d(myActivityTag, "Clicou em " + seminar.getName());
+        public void onClick(View view) {
+            Intent intent = new Intent(context, SeminarActivity.class);
+            intent.putExtra("seminar_id", seminar.getId());
+            startActivity(intent);
+        }
+    }
+
+    private class SeminarListButton extends ListButton {
+
+        private SeminarListButton(Context c, SeminarClickListener l) {
+            super (c);
+            this.setOnClickListener(l);
+        }
+
+        private SeminarListButton(Context c, Seminar s) {
+            this(c, new SeminarClickListener(c, s));
+            setText(s.getName());
         }
     }
 
 
-    /* Updates view with seminars feteched from server */
+    /* Updates view with seminars fetched from server */
     private void updateSeminarListView() {
-        Seminar[] seminars = SeminarList.getSeminarArray();
+        Seminar[] seminars = homeSeminarList.getSeminarArray();
         LinearLayout linearView = (LinearLayout) findViewById(R.id.seminarList);
         linearView.removeAllViews();
         for (Seminar s : seminars) {
-            Button seminarButton = new SeminarButton(this, s);
+            Button seminarButton = new SeminarListButton(this, s);
             linearView.addView(seminarButton);
-        }
-    }
-
-
-    /* This class defines a button used on the list view of seminars */
-    private class SeminarButton extends android.support.v7.widget.AppCompatButton {
-        public SeminarButton(Context context, Seminar s) {
-            super(context, null, R.style.Widget_SeminarButton);
-            setText(s.getName());
-            setPadding(0, 20, 0, 20);
-            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            setGravity(Gravity.CENTER);
-            setBackgroundColor(getColor(R.color.seminarButtonColor));
-            setTextColor(getColor(R.color.White));
-            this.setOnClickListener(new ClickSeminarListener(s));
         }
     }
 }

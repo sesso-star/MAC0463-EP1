@@ -9,7 +9,7 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Widget.SeminarButton" parent="android:Widget.Button">
+    <style name="Widget.ListButton" parent="android:Widget.Button">
         <item name="android:paddingTop">20dp</item>
         <item name="android:paddingBottom">20dp</item>
         <item name="android:textSize">14sp</item>

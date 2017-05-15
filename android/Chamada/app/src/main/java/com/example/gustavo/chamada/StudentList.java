@@ -1,4 +1,9 @@
 package com.example.gustavo.chamada;
+
+/**
+ * Created by gustavo on 5/15/17.
+ */
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,17 +14,17 @@ import java.util.ArrayList;
  * This class stores every seminar that was fetched from the server. It is static because it should
  * be the same for every activity
  */
-class SeminarList {
+class StudentList {
 
-    private ArrayList<Seminar> seminarArrayList;
+    private ArrayList<Seminar> studentArrayList;
 
-    SeminarList() {
-        seminarArrayList = new ArrayList<>();
+    StudentList() {
+        studentArrayList = new ArrayList<>();
     }
 
 
-    SeminarList(JSONObject seminarArrrayJSON) throws JSONException {
-        seminarArrayList = new ArrayList<>();
+    StudentList(JSONObject seminarArrrayJSON) throws JSONException {
+        studentArrayList = new ArrayList<>();
         try {
             JSONArray seminarJArray = new JSONArray(seminarArrrayJSON.getString("data"));
             for (int i = 0; i < seminarJArray.length(); i++) {
@@ -37,21 +42,22 @@ class SeminarList {
 
 
     void addSeminar(Seminar s) {
-        seminarArrayList.add(s);
+        studentArrayList.add(s);
     }
 
 
     public void removeSeminar(Seminar s) {
-        seminarArrayList.remove(s);
+        studentArrayList.remove(s);
     }
 
 
     public Seminar[] getSeminarArray() {
-        return seminarArrayList.toArray(new Seminar[seminarArrayList.size()]);
+        return studentArrayList.toArray(new Seminar[studentArrayList.size()]);
     }
 
 
     void cleanSeminarList() {
-        seminarArrayList.clear();
+        studentArrayList.clear();
     }
 }
+
