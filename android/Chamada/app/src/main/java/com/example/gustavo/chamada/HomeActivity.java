@@ -72,8 +72,9 @@ public class HomeActivity extends Activity {
 
 
     /* Callback for presence confirmation using qr code */
-    /* TODO: */
     public void qrCodeClick(View view) {
+        Intent intent = new Intent(this, QRScannerActivity.class);
+        startActivity(intent);
     }
 
 

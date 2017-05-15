@@ -41,4 +41,7 @@
     <string name="student">Aluno</string>
     <string name="unsuccessful_profile_update">Não foi possível atualizar seu perfil</string>
     <string name="unsuccessful_seminar_addition">Não conseguimos adicionar o seminário</string>
+    <string name="no_qr_reader">Problema no leitor de QR</string>
+    <string name="image_file_error">Impossível criar arquivo de imagem</string>
+    <string name="no_qr_found">Não encontramos código qr na imagem</string>
 </resources>
