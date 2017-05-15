@@ -14,25 +14,24 @@ import java.util.ArrayList;
  * This class stores every seminar that was fetched from the server. It is static because it should
  * be the same for every activity
  */
-class StudentList {
+class AttendancetList {
 
-    private ArrayList<Seminar> studentArrayList;
+    private ArrayList<User> studentArrayList;
 
-    StudentList() {
+    AttendancetList() {
         studentArrayList = new ArrayList<>();
     }
 
 
-    StudentList(JSONObject seminarArrrayJSON) throws JSONException {
+    AttendancetList(JSONObject seminarArrrayJSON) throws JSONException {
         studentArrayList = new ArrayList<>();
         try {
             JSONArray seminarJArray = new JSONArray(seminarArrrayJSON.getString("data"));
             for (int i = 0; i < seminarJArray.length(); i++) {
                 JSONObject seminarJObj = seminarJArray.getJSONObject(i);
-                String name = seminarJObj.getString("name");
-                String id = seminarJObj.getString("id");
-                Seminar s = new Seminar(id, name);
-                this.addSeminar(s);
+                String nusp = seminarJObj.getString("student_nusp");
+                User u = new User("", nusp, false);
+                this.addStudent(u);
             }
         }
         catch (Exception e){
@@ -41,18 +40,13 @@ class StudentList {
     }
 
 
-    void addSeminar(Seminar s) {
-        studentArrayList.add(s);
+    void addStudent(User u) {
+        studentArrayList.add(u);
     }
 
 
-    public void removeSeminar(Seminar s) {
-        studentArrayList.remove(s);
-    }
-
-
-    public Seminar[] getSeminarArray() {
-        return studentArrayList.toArray(new Seminar[studentArrayList.size()]);
+    public User[] getStudentArray() {
+        return studentArrayList.toArray(new User[studentArrayList.size()]);
     }
 
 

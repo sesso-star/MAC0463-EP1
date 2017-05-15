@@ -27,7 +27,7 @@
         android:text="Alunos presentes:" />
 
     <ScrollView
-        android:id="@+id/seminarListView"
+        android:id="@+id/seminarScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +36,7 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <LinearLayout
-            android:id="@+id/seminarList"
+            android:id="@+id/seminarListLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"

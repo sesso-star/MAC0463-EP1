@@ -15,7 +15,7 @@ abstract class ListButton extends android.support.v7.widget.AppCompatButton {
             super(context, null, R.style.Widget_ListButton);
             setPadding(0, 20, 0, 20);
             setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            setGravity(Gravity.CENTER);
+            setGravity(Gravity.START);
             setBackgroundColor(ContextCompat.getColor(context, R.color.seminarButtonColor));
             setTextColor(ContextCompat.getColor(context, R.color.White));
         }
