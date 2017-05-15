@@ -3,6 +3,7 @@ package com.example.gustavo.chamada;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -150,5 +151,13 @@ public class ProfileActivity extends Activity {
         sc.updateUserProfile(new ProfileUpdateResponseListener(),
                 new ProfileUpdateErrorListener(), userType, params);
         u.setName(params.get("name"));
+    }
+
+
+    /* Listener for LogOut click */
+    public void logoutClick(View view) {
+        AppUser.logOut();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
