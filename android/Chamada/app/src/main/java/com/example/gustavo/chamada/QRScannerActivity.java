@@ -2,6 +2,7 @@ package com.example.gustavo.chamada;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,12 +17,19 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.widget.ImageView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QRScannerActivity extends Activity {
 
@@ -70,40 +78,77 @@ public class QRScannerActivity extends Activity {
     }
 
 
+    /* Called whenever we finish everything we need to do about qr codes */
+    private class OnFinishingReadingQR implements AlertDialog.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            onBackPressed();
+        }
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        final Context context = this;
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap bitmap = decodePicture();
-//            ImageView iv = (ImageView) findViewById(R.id.imageView);
-//            iv.setImageBitmap(bitmap);
 
-            class OnConfirmListener implements AlertDialog.OnClickListener {
-
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    onBackPressed();
-                }
-
-            }
 
             try {
+                /* QR code detection */
                 if (detector.isOperational() && bitmap != null) {
                     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
                     SparseArray<Barcode> barcodes = detector.detect(frame);
                     for (int i = 0; i < barcodes.size(); i++) {
+                        Map<String, String> params = new HashMap<>();
                         Barcode code = barcodes.valueAt(i);
-                        ScreenUtils.showMessaDialog(this, code.rawValue, new OnConfirmListener());
+                        String seminar_id = code.rawValue;
+                        User u = AppUser.getCurrentUser();
+                        params.put("seminar_id", seminar_id);
+                        params.put("nusp", u.getNusp());
+
+                        class OnAttendanceResponse implements Response.Listener<String> {
+                            @Override
+                            public void onResponse(String response) {
+                                JSONObject obj;
+                                String message;
+                                try {
+                                    obj = new JSONObject(response);
+                                    if (obj.getString("success").equals ("true"))
+                                        message = getString(R.string.successful_attendance);
+                                    else
+                                        message = getString(R.string.unsuccessful_attendance);
+                                } catch (JSONException e) {
+                                    message = getString(R.string.blame_server);
+                                }
+                                ScreenUtils.showMessaDialog(context, message,
+                                        new OnFinishingReadingQR());
+                            }
+                        }
+
+                        class OnAttendanceError implements Response.ErrorListener {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                String message = getString(R.string.unsuccessful_attendance);
+                                ScreenUtils.showMessaDialog(context, message,
+                                        new OnFinishingReadingQR());
+                            }
+                        }
+
+                        ServerConnection sc = ServerConnection.getInstance(this);
+                        sc.sendAttendance(new OnAttendanceResponse(), new OnAttendanceError(),
+                                params);
                     }
 
                     if (barcodes.size() < 1) {
                         String message = getString(R.string.no_qr_found);
-                        ScreenUtils.showMessaDialog(this, message, new OnConfirmListener());
+                        ScreenUtils.showMessaDialog(this, message, new OnFinishingReadingQR());
                     }
                 }
             }
             catch (Exception e) {
                 String message = getString(R.string.no_qr_reader);
-                ScreenUtils.showMessaDialog(this, message, new OnConfirmListener());
+                ScreenUtils.showMessaDialog(this, message, new OnFinishingReadingQR());
             }
         }
     }
@@ -125,6 +170,7 @@ public class QRScannerActivity extends Activity {
     }
 
 
+    /* Opens and scales the picture taken */
     private Bitmap decodePicture() {
         // We need to specify the size of the picture
         int targetW = 500;

@@ -46,4 +46,6 @@
     <string name="no_qr_found">Não encontramos código qr na imagem</string>
     <string name="show_attendance">Mostrar Seminários Assistidos</string>
     <string name="attended_seminars">Seminários Assistidos</string>
+    <string name="successful_attendance">Presença confirmada</string>
+    <string name="unsuccessful_attendance">Não conseguimos confirmar sua presença</string>
 </resources>
