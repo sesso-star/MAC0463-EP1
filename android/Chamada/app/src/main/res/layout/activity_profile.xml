@@ -36,6 +36,17 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/showAttendance"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@color/seminarButtonColor"
+            android:textColor="@color/White"
+            android:onClick="showAttendance"
+            android:text="@string/show_attendance" />
+
+        <Button
             android:id="@+id/changeNameButton"
             android:layout_width="200dp"
             android:layout_height="60dp"

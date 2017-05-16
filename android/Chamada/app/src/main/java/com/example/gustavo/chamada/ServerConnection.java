@@ -179,4 +179,20 @@ public class ServerConnection extends Activity {
         };
         addToRequestQueue(stringRequest);
     }
+
+
+    /* Sends a server request for list of seminars a student attended */
+    public void fetchUserAttendance(Response.Listener<String> responseListener,
+                                    Response.ErrorListener errorListener,
+                                    final Map<String, String> params) {
+        String url = serverUrl + "/attendence/listSeminars";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
+                errorListener) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return params;
+            }
+        };
+        addToRequestQueue(stringRequest);
+    }
 }

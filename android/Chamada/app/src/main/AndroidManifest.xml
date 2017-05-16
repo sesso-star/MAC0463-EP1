@@ -77,13 +77,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.gustavo.chamada.HomeActivity" />
         </activity>
-        <activity android:name=".SeminarActivity"
+        <activity
+            android:name=".SeminarActivity"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.gustavo.chamada.HomeActivity" />
+        </activity>
+        <activity android:name=".UserAttendanceActivity"
+            android:parentActivityName=".ProfileActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gustavo.chamada.ProfileActivity" />
         </activity>
     </application>
 

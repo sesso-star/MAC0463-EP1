@@ -13,15 +13,14 @@ class SeminarList {
 
     private ArrayList<Seminar> seminarArrayList;
 
-    SeminarList() {
-        seminarArrayList = new ArrayList<>();
-    }
+    static int DEFAULT_SEMINAR_LIST = 0;
+    static int USER_ATTENDANCE_SEMINAR_LIST = 1;
 
 
-    SeminarList(JSONObject seminarArrrayJSON) throws JSONException {
+    private void SeminarListDefault(JSONObject seminarArrayJSON) throws JSONException {
         seminarArrayList = new ArrayList<>();
         try {
-            JSONArray seminarJArray = new JSONArray(seminarArrrayJSON.getString("data"));
+            JSONArray seminarJArray = new JSONArray(seminarArrayJSON.getString("data"));
             for (int i = 0; i < seminarJArray.length(); i++) {
                 JSONObject seminarJObj = seminarJArray.getJSONObject(i);
                 String name = seminarJObj.getString("name");
@@ -31,12 +30,43 @@ class SeminarList {
             }
         }
         catch (Exception e){
-            throw e;
+            if (!seminarArrayJSON.getString("success").equals("true"))
+                throw e;
         }
     }
 
 
-    void addSeminar(Seminar s) {
+    private void SeminarListUserAttendance(JSONObject seminarArrayJSON) throws JSONException {
+        seminarArrayList = new ArrayList<>();
+        try {
+            JSONArray seminarJArray = new JSONArray(seminarArrayJSON.getString("data"));
+            for (int i = 0; i < seminarJArray.length(); i++) {
+                JSONObject seminarJObj = seminarJArray.getJSONObject(i);
+                String id = seminarJObj.getString("seminar_id");
+                Seminar s = new Seminar(id, "");
+                this.addSeminar(s);
+            }
+        }
+        catch (Exception e){
+            if (!seminarArrayJSON.getString("success").equals("true"))
+                throw e;
+        }
+    }
+
+
+    SeminarList(JSONObject seminarArrayJSON, int jsonType) throws JSONException {
+        if (jsonType == DEFAULT_SEMINAR_LIST)
+            SeminarListDefault(seminarArrayJSON);
+        else
+            SeminarListUserAttendance(seminarArrayJSON);
+    }
+
+
+    SeminarList(JSONObject seminarArrayJson) throws JSONException {
+        this(seminarArrayJson, DEFAULT_SEMINAR_LIST);
+    }
+
+    private void addSeminar(Seminar s) {
         seminarArrayList.add(s);
     }
 
@@ -46,7 +76,7 @@ class SeminarList {
     }
 
 
-    public Seminar[] getSeminarArray() {
+    Seminar[] getSeminarArray() {
         return seminarArrayList.toArray(new Seminar[seminarArrayList.size()]);
     }
 

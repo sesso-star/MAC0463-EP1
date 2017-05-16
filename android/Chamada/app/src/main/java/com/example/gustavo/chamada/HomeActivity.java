@@ -81,7 +81,7 @@ public class HomeActivity extends Activity {
         final Context context = this;
         final EditText seminarNameInput = new EditText(context);
         final Map<String, String> params = new HashMap<>();
-
+        /*TODO: add seminar code*/
         /* Defines the Listener of seminar name input event */
         class OnSeminarInput implements AlertDialog.OnClickListener {
             @Override

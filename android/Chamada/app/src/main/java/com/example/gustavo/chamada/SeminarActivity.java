@@ -2,9 +2,7 @@ package com.example.gustavo.chamada;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -82,21 +80,12 @@ public class SeminarActivity extends Activity {
                 JSONObject obj;
                 try {
                     obj = new JSONObject(response);
-                    AttendancetList studentList = new AttendancetList(obj);
+                    AttendanceList studentList = new AttendanceList(obj);
                     updateStudentListView(studentList);
                 }
                 catch (Exception e) {
-                    try {
-                        obj = new JSONObject(response);
-                        if (obj.getString("success").equals("true")) {
-                            AttendancetList studentList = new AttendancetList();
-                            updateStudentListView(studentList);
-                        }
-                    }
-                    catch (Exception e2) {
-                        String message = context.getString(R.string.blame_server);
-                        ScreenUtils.showMessaDialog(context, message, null);
-                    }
+                    String message = context.getString(R.string.blame_server);
+                    ScreenUtils.showMessaDialog(context, message, null);
                 }
             }
         }
@@ -154,7 +143,7 @@ public class SeminarActivity extends Activity {
         }
     }
 
-    void updateStudentListView(AttendancetList students) {
+    void updateStudentListView(AttendanceList students) {
         final Context context = this;
         final User[] studentArray = students.getStudentArray();
         final LinearLayout linearView = (LinearLayout) findViewById(R.id.seminarListLayout);

@@ -1,6 +1,8 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -74,27 +76,36 @@ public class QRScannerActivity extends Activity {
             Bitmap bitmap = decodePicture();
 //            ImageView iv = (ImageView) findViewById(R.id.imageView);
 //            iv.setImageBitmap(bitmap);
+
+            class OnConfirmListener implements AlertDialog.OnClickListener {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    onBackPressed();
+                }
+
+            }
+
             try {
                 if (detector.isOperational() && bitmap != null) {
                     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
                     SparseArray<Barcode> barcodes = detector.detect(frame);
                     for (int i = 0; i < barcodes.size(); i++) {
                         Barcode code = barcodes.valueAt(i);
-                        ScreenUtils.showMessaDialog(this, code.rawValue, null);
+                        ScreenUtils.showMessaDialog(this, code.rawValue, new OnConfirmListener());
                     }
 
                     if (barcodes.size() < 1) {
                         String message = getString(R.string.no_qr_found);
-                        ScreenUtils.showMessaDialog(this, message, null);
+                        ScreenUtils.showMessaDialog(this, message, new OnConfirmListener());
                     }
                 }
             }
             catch (Exception e) {
                 String message = getString(R.string.no_qr_reader);
-                ScreenUtils.showMessaDialog(this, message, null);
+                ScreenUtils.showMessaDialog(this, message, new OnConfirmListener());
             }
         }
-        onBackPressed();
     }
 
 

@@ -160,4 +160,11 @@ public class ProfileActivity extends Activity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
+
+
+    /* Listener for showing seminars user attended*/
+    public void showAttendance(View view) {
+        Intent intent = new Intent(this, UserAttendanceActivity.class);
+        startActivity(intent);
+    }
 }
