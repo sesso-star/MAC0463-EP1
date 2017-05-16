@@ -2,8 +2,14 @@ package com.example.gustavo.chamada;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +20,15 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.android.gms.vision.text.Line;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.encoder.QRCode;
 
 
 public class SeminarActivity extends Activity {
@@ -104,6 +119,50 @@ public class SeminarActivity extends Activity {
         sc.fetchSeminarAttendance(new OnResponse(), new OnError(), params);
     }
 
+
+    /* Listener to the qr code click. It should create a QR code image and show it to the user */
+    public void qrCodeClick(View view) {
+        String id = mySeminar.getId();
+        Bitmap qrCodeBitmap = TextToImageEncode(id);
+        ImageView imgView = new ImageView(this);
+        imgView.setImageBitmap(qrCodeBitmap);
+        LinearLayout thisLayout = (LinearLayout) findViewById(R.id.seminarActivityLayout);
+        thisLayout.setGravity(Gravity.CENTER);
+        thisLayout.removeAllViews();
+        thisLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.White));
+        thisLayout.addView(imgView);
+    }
+
+
+    /* Encodes a text to a bitmap QR code */
+    private Bitmap TextToImageEncode(String text) {
+        BitMatrix bitMatrix;
+        final int QR_CODE_SIZE = 700;
+        try {
+            bitMatrix = new MultiFormatWriter().encode(text,
+                    BarcodeFormat.DATA_MATRIX.QR_CODE, QR_CODE_SIZE, QR_CODE_SIZE, null);
+
+        } catch (IllegalArgumentException Illegalargumentexception) {
+            return null;
+        } catch (WriterException e) {
+            return null;
+        }
+
+        int[] pixels = new int[QR_CODE_SIZE * QR_CODE_SIZE];
+        for (int y = 0; y < QR_CODE_SIZE; y++) {
+            int offset = y * QR_CODE_SIZE;
+            for (int x = 0; x < QR_CODE_SIZE; x++) {
+                if (bitMatrix.get(x, y))
+                    pixels[offset + x] = ContextCompat.getColor(this, R.color.mainBlueish);
+                else
+                    pixels[offset + x] = ContextCompat.getColor(this, R.color.White);
+            }
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(QR_CODE_SIZE, QR_CODE_SIZE, Bitmap.Config.ARGB_4444);
+        bitmap.setPixels(pixels, 0, QR_CODE_SIZE, 0, 0, QR_CODE_SIZE, QR_CODE_SIZE);
+        return bitmap;
+    }
 
     private class StudentListButton extends ListButton {
 
