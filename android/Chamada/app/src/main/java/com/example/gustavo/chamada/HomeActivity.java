@@ -35,14 +35,24 @@ public class HomeActivity extends Activity {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
         ScreenUtils.enableDisableView(layout, false);
+        setUserLayout();
+
+        fetchUserName();
+        fetchSeminarList();
+    }
+
+
+    public void setUserLayout() {
         Button addUserButton = (Button) findViewById(R.id.addUserButton);
         Button addSeminarButton = (Button) findViewById(R.id.addSeminarButton);
+        Button readQR = (Button) findViewById(R.id.qrCodeButton);
         if (!AppUser.getCurrentUser().isProfessor ()) {
             addUserButton.setVisibility(View.GONE);
             addSeminarButton.setVisibility(View.GONE);
         }
-        fetchUserName();
-        fetchSeminarList();
+        else {
+            readQR.setVisibility(View.GONE);
+        }
     }
 
     @Override

@@ -81,7 +81,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/confirmPresence"
+                android:id="@+id/qrCodeButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:onClick="qrCodeClick"
