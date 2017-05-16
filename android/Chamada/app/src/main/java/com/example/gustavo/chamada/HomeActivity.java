@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,6 +55,7 @@ public class HomeActivity extends Activity {
     public void onBackPressed() {
         AppUser.logOut();
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -210,6 +213,60 @@ public class HomeActivity extends Activity {
 
         ServerConnection sc = ServerConnection.getInstance(this);
         sc.fetchSeminars(new FetchSeminarResponseListener(), new FetchSeminarErrorListener());
+    }
+
+
+    /* When user click on it's name, he should be able to change it */
+    public void onUserNameClick(View view) {
+        final Context context = this;
+        final Activity thisActivity = this;
+        final EditText newNameInput =  new EditText(context);
+        final EditText passwordInput = new EditText(context);
+        passwordInput.
+                setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        final User u = AppUser.getCurrentUser();
+        final String userType = u.getUserType();
+        final Map<String, String> params = new HashMap<>();
+        params.put("nusp", u.getNusp());
+        params.put("name", u.getNusp());
+
+        /* Defines a Listener to the event of finishing sending and processing a server request for
+           name change. If the change was successful, we are going to reload the activity so we can
+           show the correct user name. */
+        class OnChangedName implements DialogInterface.OnClickListener {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+                startActivity(getIntent());
+            }
+        }
+
+        /* Defines the Listener of password input event */
+        class OnPasswordInput implements AppUser.PasswordConfirmationListener {
+            @Override
+            public void onConfirmation() {
+                /* Defines the Listener of password confirmation event */
+                class OnPasswordConfirmation implements DialogInterface.OnClickListener {
+                    @Override
+                    /* Defines the Listener of new name input */
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newName = newNameInput.getText().toString();
+                        params.put("name", newName);
+                        ProfileActivity.sendProfileChange(context, userType, params,
+                                new OnChangedName());
+                    }
+                }
+                /* gets typed password starts listener for password confirmation */
+                String message = context.getString(R.string.type_new_name_string);
+                String password = passwordInput.getText().toString();
+                params.put("pass", password);
+                ScreenUtils.showInputDialog(context, message, newNameInput,
+                        new OnPasswordConfirmation(), null);
+            }
+        }
+
+        /* shows input dialog message */
+        AppUser.confirmPassword(this, passwordInput, new OnPasswordInput());
     }
 
 

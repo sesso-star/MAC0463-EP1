@@ -164,6 +164,12 @@ public class SeminarActivity extends Activity {
         return bitmap;
     }
 
+
+    public void changeSeminarNameClick(View view) {
+
+    }
+
+
     private class StudentListButton extends ListButton {
 
         class OnStudentNameFetch implements Response.Listener<String> {

@@ -1,6 +1,7 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,7 +54,7 @@ public class ProfileActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         String newPass = newPasswordInput.getText().toString();
                         params.put("pass", newPass);
-                        sendProfileChange(context, userType, params);
+                        sendProfileChange(context, userType, params, null);
                     }
                 }
                 /* gets typed password starts listener for password confirmation */
@@ -94,7 +95,7 @@ public class ProfileActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         String newName = newNameInput.getText().toString();
                         params.put("name", newName);
-                        sendProfileChange(context, userType, params);
+                        sendProfileChange(context, userType, params, null);
                     }
                 }
                 /* gets typed password starts listener for password confirmation */
@@ -112,8 +113,9 @@ public class ProfileActivity extends Activity {
 
 
     /* Asks ServerConnection for a request for profile change */
-    private void sendProfileChange (final Context context, String userType,
-                                    final Map<String, String> params) {
+    public static void sendProfileChange (final Context context, String userType,
+                                           final Map<String, String> params,
+                                           final AlertDialog.OnClickListener finishedListener) {
         final User u = AppUser.getCurrentUser();
         /* Defines the Listeners of profile change server request */
         class ProfileUpdateResponseListener implements Response.Listener<String> {
@@ -135,7 +137,7 @@ public class ProfileActivity extends Activity {
                 } catch (JSONException e) {
                     message = context.getString(R.string.blame_server);
                 }
-                ScreenUtils.showMessaDialog(context, message, null);
+                ScreenUtils.showMessaDialog(context, message, finishedListener);
             }
         }
 
@@ -143,7 +145,7 @@ public class ProfileActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String message = context.getString(R.string.no_server_connection);
-                ScreenUtils.showMessaDialog(context, message, null);
+                ScreenUtils.showMessaDialog(context, message, finishedListener);
             }
         }
 
@@ -158,6 +160,7 @@ public class ProfileActivity extends Activity {
     public void logoutClick(View view) {
         AppUser.logOut();
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

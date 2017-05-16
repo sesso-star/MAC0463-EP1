@@ -27,6 +27,11 @@ public class LoginActivity extends Activity {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
 
     public void tryLogin(View view) {
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
