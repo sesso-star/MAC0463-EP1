@@ -297,7 +297,7 @@ public class HomeActivity extends Activity {
         }
 
         /* shows input dialog message */
-        AppUser.confirmPassword(this, passwordInput, new OnPasswordInput());
+        ServerConnection.confirmPassword(this, passwordInput, new OnPasswordInput());
     }
 
 

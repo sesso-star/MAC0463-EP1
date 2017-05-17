@@ -2,7 +2,9 @@ package com.example.gustavo.chamada;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -11,10 +13,13 @@ import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -212,4 +217,63 @@ public class ServerConnection extends Activity {
         addToRequestQueue(stringRequest);
     }
 
+
+    static void confirmPassword(Context c, final EditText inputText,
+                                final AppUser.PasswordConfirmationListener listener) {
+        final Context context = c;
+
+        /* Listener for successful login (password confirmation) connection */
+        class LoginResponseListener implements Response.Listener<String> {
+            @Override
+            public void onResponse (String response) {
+                JSONObject obj;
+                try {
+                    obj = new JSONObject(response);
+                    if (obj.getString("success").equals ("true")) {
+                        /* Successful login*/
+                        listener.onConfirmation();
+                    }
+                    else {
+                        String s = context.getString(R.string.invalid_password);
+                        ScreenUtils.showMessaDialog(context, s, null);
+                    }
+                }
+                catch (Exception e) {
+                    String message = context.getString(R.string.no_server_connection);
+                    ScreenUtils.showMessaDialog(context, message, null);
+                }
+            }
+        }
+
+        /* Listener for login (password confirmation) error */
+        class LoginErrorListener implements Response.ErrorListener {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = context.getString(R.string.no_server_connection);
+                ScreenUtils.showMessaDialog(context, message, null);
+            }
+        }
+
+        String message;
+        message = context.getString(R.string.password_textview);
+        ScreenUtils.showInputDialog(context, message, inputText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String password = inputText.getText().toString();
+                        ServerConnection sc = ServerConnection.getInstance(context);
+                        String userType = AppUser.getCurrentUser().getUserType();
+                        Map<String, String> params = new HashMap<>();
+                        params.put("nusp", AppUser.getCurrentUser().getNusp());
+                        params.put("pass", password);
+                        sc.login(new LoginResponseListener(), new LoginErrorListener(),
+                                userType, params);
+                    }
+                },
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        /*do nothing*/
+                    }});
+    }
 }
