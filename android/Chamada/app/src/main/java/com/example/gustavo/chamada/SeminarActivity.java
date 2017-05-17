@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -235,10 +236,77 @@ public class SeminarActivity extends Activity {
         seminarActivityLayout.addView(passcodeTextView);
     }
 
+    /* Updates the activity after a attendance attempt*/
+    private class OnFinishedAttendance implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            finish();
+            startActivity(getIntent());
+        }
+    }
 
-    /**/
+    /* In this case, we should show an input dialog asking the user for the seminar passcode,
+    * if it is the correct passcode, then we can send attendance to the server */
     public void attendWithPasscode() {
+        final Context context = this;
+        final EditText passcodeInput = new EditText(context);
+        final Map<String, String> params = new HashMap<>();
+        params.put("seminar_id", mySeminar.getId());
+        params.put("nusp", AppUser.getCurrentUser().getNusp());
 
+        /* Listener for passcode input */
+        class OnPasscodeInput implements AlertDialog.OnClickListener {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String typedPasscode = passcodeInput.getText().toString();
+
+                /* Listeners for server response on attendance request */
+                class OnAttendanceResponse implements Response.Listener<String> {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject obj;
+                        String message;
+
+                        try {
+                            obj = new JSONObject(response);
+                            if (obj.getString("success").equals("true")) {
+                                message = context.getString(R.string.successful_attendance);
+                                message += " " + context.getString(R.string.at_seminar) + ": " +
+                                        mySeminar.getName();
+                            }
+                            else
+                                message = context.getString(R.string.unsuccessful_attendance);
+                        }
+                        catch (Exception e) {
+                            message = context.getString(R.string.blame_server);
+                        }
+
+
+                        ScreenUtils.showMessaDialog(context, message, new OnFinishedAttendance());
+                    }
+                }
+
+                class OnAttendanceError implements Response.ErrorListener {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        String message = context.getString(R.string.no_server_connection);
+                        ScreenUtils.showMessaDialog(context, message, null);
+                    }
+                }
+
+                if (typedPasscode.equals(mySeminar.getPasscode())) {
+                    ServerConnection sc = ServerConnection.getInstance(context);
+                    sc.sendAttendance(new OnAttendanceResponse(), new OnAttendanceError(), params);
+                }
+                else {
+                    String message = context.getString(R.string.wrong_passcode);
+                    ScreenUtils.showMessaDialog(context, message, null);
+                }
+            }
+        }
+
+        String message = getString(R.string.type_seminar_passcode);
+        ScreenUtils.showInputDialog(context, message, passcodeInput, new OnPasscodeInput(), null);
     }
 
     private class StudentListButton extends ListButton {

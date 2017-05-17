@@ -59,5 +59,7 @@
     <string name="image_file_error">Impossível criar arquivo de imagem</string>
     <string name="no_qr_found">Não encontramos código qr na imagem</string>
     <string name="loadingMessage">Carregando…</string>
+    <string name="at_seminar">no seminário</string>
+    <string name="wrong_passcode">Código incorreto</string>
 
 </resources>

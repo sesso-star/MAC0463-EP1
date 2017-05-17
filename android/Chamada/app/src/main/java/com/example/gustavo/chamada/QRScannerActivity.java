@@ -86,6 +86,14 @@ public class QRScannerActivity extends Activity {
 
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         final Context context = this;
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -168,7 +176,7 @@ public class QRScannerActivity extends Activity {
                 try {
                     obj = new JSONObject(response);
                     Seminar s = new Seminar(obj);
-                    message = getString(R.string.successful_attendance) + " no seminário: " +
+                    message = getString(R.string.successful_attendance) + context.getString(R.string.at_seminar) +
                             s.getName();
                 }
                 catch (Exception e) {
