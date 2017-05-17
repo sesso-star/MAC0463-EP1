@@ -10,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import android.provider.MediaStore;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -35,7 +34,6 @@ public class QRScannerActivity extends Activity {
     * https://developer.android.com/training/camera/photobasics.html */
     final private int REQUEST_IMAGE_CAPTURE = 1;
     private BarcodeDetector detector;
-    private Uri photoUri;
     private String photoPath;
 
     @Override
@@ -66,7 +64,7 @@ public class QRScannerActivity extends Activity {
                 ScreenUtils.showMessaDialog(this, message, null);
             }
             if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(this,
+                Uri photoUri = FileProvider.getUriForFile(this,
                         "com.example.gustavo.chamada.fileprovider",
                         photoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
@@ -175,7 +173,7 @@ public class QRScannerActivity extends Activity {
                 JSONObject obj;
                 try {
                     obj = new JSONObject(response);
-                    Seminar s = new Seminar(obj);
+                    Seminar s = new Seminar(obj.getJSONObject("data"));
                     message = getString(R.string.successful_attendance) + " " +
                             context.getString(R.string.at_seminar) + "\n" + s.getName();
                 }

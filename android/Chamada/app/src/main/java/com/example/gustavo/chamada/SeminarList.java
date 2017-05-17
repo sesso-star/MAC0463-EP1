@@ -23,9 +23,7 @@ class SeminarList {
             JSONArray seminarJArray = new JSONArray(seminarArrayJSON.getString("data"));
             for (int i = 0; i < seminarJArray.length(); i++) {
                 JSONObject seminarJObj = seminarJArray.getJSONObject(i);
-                String name = seminarJObj.getString("name");
-                String id = seminarJObj.getString("id");
-                Seminar s = new Seminar(id, name);
+                Seminar s = new Seminar(seminarJObj);
                 this.addSeminar(s);
             }
         }
@@ -43,7 +41,7 @@ class SeminarList {
             for (int i = 0; i < seminarJArray.length(); i++) {
                 JSONObject seminarJObj = seminarJArray.getJSONObject(i);
                 String id = seminarJObj.getString("seminar_id");
-                Seminar s = new Seminar(id, "");
+                Seminar s = new Seminar(id);
                 this.addSeminar(s);
             }
         }

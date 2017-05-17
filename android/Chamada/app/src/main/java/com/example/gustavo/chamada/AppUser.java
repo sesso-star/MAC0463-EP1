@@ -33,8 +33,4 @@ class AppUser {
     static boolean hasLoggedInUser() {
         return currentUser != null;
     }
-
-    interface PasswordConfirmationListener {
-        void onConfirmation();
-    }
 }

@@ -65,7 +65,7 @@ public class SeminarActivity extends Activity {
             public void onResponse(String response) {
                 try {
                     JSONObject obj = new JSONObject(response);
-                    mySeminar = new Seminar(obj);
+                    mySeminar = new Seminar(obj.getJSONObject("data"));
                     seminarNameView.setText(mySeminar.getName());
                     fetchSeminarAttendance();
                 }

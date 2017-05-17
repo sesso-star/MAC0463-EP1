@@ -273,7 +273,7 @@ public class HomeActivity extends Activity {
         }
 
         /* Defines the Listener of password input event */
-        class OnPasswordInput implements AppUser.PasswordConfirmationListener {
+        class OnPasswordInput implements ServerConnection.PasswordConfirmationListener {
             @Override
             public void onConfirmation() {
                 /* Defines the Listener of password confirmation event */

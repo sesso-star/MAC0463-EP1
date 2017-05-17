@@ -12,22 +12,17 @@ class Seminar {
     private int id;
     private String passcode;
 
-    Seminar(String id, String name) {
-        this.name = name;
+
+    Seminar(String id) {
         this.id = Integer.parseInt(id);
     }
 
-    Seminar(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 
     Seminar(JSONObject obj) throws JSONException {
         try {
-            JSONObject data = obj.getJSONObject("data");
-            this.name = data.getString("name");
-            this.id = Integer.parseInt(data.getString("id"));
-            this.passcode = data.getString("data");
+            this.name = obj.getString("name");
+            this.id = Integer.parseInt(obj.getString("id"));
+            this.passcode = obj.getString("data");
         }
         catch (Exception e) {
             throw e;

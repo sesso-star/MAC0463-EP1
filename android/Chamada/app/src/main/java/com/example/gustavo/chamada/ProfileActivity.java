@@ -50,7 +50,7 @@ public class ProfileActivity extends Activity {
         params.put("name", u.getName());
 
         /* Defines the Listener of (old) password input event */
-        class OnPasswordInput implements AppUser.PasswordConfirmationListener {
+        class OnPasswordInput implements ServerConnection.PasswordConfirmationListener {
             @Override
             public void onConfirmation() {
                 /* Defines the Listener of (old) password confirmation event */
@@ -91,7 +91,7 @@ public class ProfileActivity extends Activity {
         params.put("name", u.getNusp());
 
         /* Defines the Listener of password input event */
-        class OnPasswordInput implements AppUser.PasswordConfirmationListener {
+        class OnPasswordInput implements ServerConnection.PasswordConfirmationListener {
             @Override
             public void onConfirmation() {
                 /* Defines the Listener of password confirmation event */

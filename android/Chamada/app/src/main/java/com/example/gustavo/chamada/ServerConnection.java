@@ -218,8 +218,12 @@ public class ServerConnection extends Activity {
     }
 
 
+    interface PasswordConfirmationListener {
+        void onConfirmation();
+    }
+
     static void confirmPassword(Context c, final EditText inputText,
-                                final AppUser.PasswordConfirmationListener listener) {
+                                final PasswordConfirmationListener listener) {
         final Context context = c;
 
         /* Listener for successful login (password confirmation) connection */
