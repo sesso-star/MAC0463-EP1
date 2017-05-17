@@ -23,7 +23,6 @@ import java.util.Map;
 
 public class HomeActivity extends Activity {
 
-    private static final String myActivityTag = "HOME_ACTIVITY";
     /* Contains all seminars available in the server */
     private static SeminarList homeSeminarList;
 
@@ -54,11 +53,13 @@ public class HomeActivity extends Activity {
         }
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
         fetchUserName();
     }
+
 
     @Override
     public void onBackPressed() {
@@ -68,11 +69,13 @@ public class HomeActivity extends Activity {
         startActivity(intent);
     }
 
+
     /* Callback for add user button. This button only shows if you are a professor user */
     public void addUser(View view) {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
+
 
     /* Callback for change register */
     public void changeProfile(View view) {
@@ -92,52 +95,71 @@ public class HomeActivity extends Activity {
     public void addSeminarClick(View view) {
         final Context context = this;
         final EditText seminarNameInput = new EditText(context);
+        final EditText seminarPasscodeInput = new EditText(context);
         final Map<String, String> params = new HashMap<>();
         /*TODO: add seminar code*/
         /* Defines the Listener of seminar name input event */
-        class OnSeminarInput implements AlertDialog.OnClickListener {
+        class OnSeminarNameInput implements AlertDialog.OnClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String seminarName = seminarNameInput.getText().toString();
                 params.put("name", seminarName);
-                ServerConnection sc = ServerConnection.getInstance(context);
 
-                class OnSeminarAddition implements Response.Listener<String> {
+                /* Listener for typing seminar name */
+                class OnSeminarPasscodeInput implements AlertDialog.OnClickListener {
                     @Override
-                    public void onResponse(String response) {
-                        JSONObject obj;
-                        String message;
-                        try {
-                            obj = new JSONObject(response);
-                            if (obj.getString("success").equals ("true")) {
-                                message = context.getString(R.string.successful_seminar_addition);
-                            }
-                            else {
-                                message = context.getString(R.string.unsuccessful_seminar_addition);
-                            }
-                        } catch (JSONException e) {
-                            message = context.getString(R.string.blame_server);
-                        }
-                        ScreenUtils.showMessaDialog(context, message, null);
-                        fetchSeminarList();
+                    public void onClick(DialogInterface dialog, int which) {
+                        String seminarPassCode = seminarPasscodeInput.getText().toString();
+                        params.put("data", seminarPassCode);
+                        sendNewSeminar(params);
                     }
                 }
 
-                class OnError implements Response.ErrorListener {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String message = getString(R.string.no_server_connection);
-                        ScreenUtils.showMessaDialog(context, message, null);
-                    }
-                }
-
-                sc.addSerminar(new OnSeminarAddition(), new OnError(), params);
+                String message = context.getString(R.string.type_seminar_passcode);
+                ScreenUtils.showInputDialog(context, message, seminarPasscodeInput,
+                        new OnSeminarPasscodeInput(), null);
             }
         }
 
         /* shows input dialog message */
         String message = getString(R.string.type_seminar_name);
-        ScreenUtils.showInputDialog(this, message,seminarNameInput, new OnSeminarInput(), null);
+        ScreenUtils.showInputDialog(context, message,seminarNameInput, new OnSeminarNameInput(), null);
+    }
+
+
+    /* Given the parameters, send a server request to add a new seminar */
+    private void sendNewSeminar(Map<String, String> params) {
+        final Context context = this;
+        class OnSeminarAddition implements Response.Listener<String> {
+            @Override
+            public void onResponse(String response) {
+                JSONObject obj;
+                String message;
+                try {
+                    obj = new JSONObject(response);
+                    if (obj.getString("success").equals ("true")) {
+                        message = context.getString(R.string.successful_seminar_addition);
+                    }
+                    else {
+                        message = context.getString(R.string.unsuccessful_seminar_addition);
+                    }
+                } catch (JSONException e) {
+                    message = context.getString(R.string.blame_server);
+                }
+                ScreenUtils.showMessaDialog(context, message, null);
+                fetchSeminarList();
+            }
+        }
+
+        class OnError implements Response.ErrorListener {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = getString(R.string.no_server_connection);
+                ScreenUtils.showMessaDialog(context, message, null);
+            }
+        }
+        ServerConnection sc = ServerConnection.getInstance(this);
+        sc.addSerminar(new OnSeminarAddition(), new OnError(), params);
     }
 
 

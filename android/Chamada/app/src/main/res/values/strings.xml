@@ -3,15 +3,18 @@
     <!--Home-->
     <string name="welcome_message">Bem-vindo (a),</string>
 
+
     <!--Login-->
     <string name="password_textview">Senha</string>
     <string name="nusp_textview">Número USP</string>
     <string name="login_button_text">Entrar</string>
     <string name="signup_button_text">Cadastrar</string>
 
+
     <!--Server Fail-->
     <string name="no_server_connection">Não conseguimos nos conectar ao servidor</string>
     <string name="blame_server">Error no servidor</string>
+
 
     <!--Sign Up and Change Profile-->
     <string name="successful_signup">Usuário cadastrado com sucesso</string>
@@ -24,6 +27,27 @@
     <string name="type_new_password_string">Digite a nova senha</string>
     <string name="confirm_password_text">Confirme sua senha</string>
     <string name="invalid_password">Senha incorreta</string>
+    <string name="successful_profile_update">Cadastro alterado com sucesso</string>
+    <string name="profile_title">Seu Perfil</string>
+    <string name="logout_text">Sair</string>
+    <string name="invalid_credential">Senha ou usuário inválidos</string>
+    <string name="professor">Professor</string>
+    <string name="student">Aluno</string>
+    <string name="unsuccessful_profile_update">Não foi possível atualizar seu perfil</string>
+
+
+    <!--Seminars and Attendance-->
+    <string name="type_seminar_name">Digite o nome do seminário</string>
+    <string name="successful_seminar_addition">Seminário adicionado</string>
+    <string name="unsuccessful_seminar_addition">Não conseguimos adicionar o seminário</string>
+    <string name="show_attendance">Mostrar Seminários Assistidos</string>
+    <string name="attended_seminars">Seminários Assistidos</string>
+    <string name="successful_attendance">Presença confirmada</string>
+    <string name="unsuccessful_attendance">Não conseguimos confirmar sua presença</string>
+    <string name="attended_students">Alunos presentes:</string>
+    <string name="seminar_passcode_is">O código desse seminário é:</string>
+    <string name="type_seminar_passcode">Digite o código do seminário</string>
+
 
     <!--General-->
     <string name="app_name">Chamada</string>
@@ -31,24 +55,9 @@
     <string name="password">Senha</string>
     <string name="ok_message">OK</string>
     <string name="cancel_message">Cancelar</string>
-    <string name="successful_profile_update">Cadastro alterado com sucesso</string>
-    <string name="type_seminar_name">Digite o nome do seminário</string>
-    <string name="successful_seminar_addition">Seminário adicionado</string>
-    <string name="profile_title">Seu Perfil</string>
-    <string name="logout_text">Sair</string>
-    <string name="invalid_credential">Senha ou usuário inválidos</string>
-    <string name="professor">Professor</string>
-    <string name="student">Aluno</string>
-    <string name="unsuccessful_profile_update">Não foi possível atualizar seu perfil</string>
-    <string name="unsuccessful_seminar_addition">Não conseguimos adicionar o seminário</string>
     <string name="no_qr_reader">Problema no leitor de QR</string>
     <string name="image_file_error">Impossível criar arquivo de imagem</string>
     <string name="no_qr_found">Não encontramos código qr na imagem</string>
-    <string name="show_attendance">Mostrar Seminários Assistidos</string>
-    <string name="attended_seminars">Seminários Assistidos</string>
-    <string name="successful_attendance">Presença confirmada</string>
-    <string name="unsuccessful_attendance">Não conseguimos confirmar sua presença</string>
-    <string name="attended_students">Alunos presentes:</string>
-    <string name="loadingMessage">Carregando...</string>
-    <string name="seminar_passcode_is">A senha desse seminário é:</string>
+    <string name="loadingMessage">Carregando…</string>
+
 </resources>
