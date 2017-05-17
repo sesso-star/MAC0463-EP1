@@ -86,7 +86,7 @@ public class QRScannerActivity extends Activity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
     }
 
@@ -117,12 +117,16 @@ public class QRScannerActivity extends Activity {
                                 String message;
                                 try {
                                     obj = new JSONObject(response);
-                                    if (obj.getString("success").equals ("true")) {
+                                    if (obj.getString("success").equals("true")) {
                                         showConfimedAttendanceMessage(seminar_id);
                                         return;
                                     }
-                                    else
+                                    else if (obj.get("success").equals(R.string.maybe)) {
+                                        message = getString(R.string.postponed_attendance);
+                                    }
+                                    else {
                                         message = getString(R.string.unsuccessful_attendance);
+                                    }
                                 } catch (JSONException e) {
                                     message = getString(R.string.blame_server);
                                 }
@@ -142,7 +146,7 @@ public class QRScannerActivity extends Activity {
 
                         ServerConnection sc = ServerConnection.getInstance(this);
                         sc.sendAttendance(new OnAttendanceResponse(), new OnAttendanceError(),
-                                params);
+                                params, context);
                     }
 
                     if (barcodes.size() < 1) {

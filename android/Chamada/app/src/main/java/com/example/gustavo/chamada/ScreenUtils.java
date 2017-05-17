@@ -64,6 +64,11 @@ class ScreenUtils {
         dialog.show();
     }
 
+    static void showToastMessage(String message) {
+
+    }
+
+
     static void showInputDialog(Context context, String title, EditText inputEditText,
                                 DialogInterface.OnClickListener okListener,
                                 DialogInterface.OnClickListener cancelListener) {

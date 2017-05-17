@@ -47,6 +47,10 @@
     <string name="attended_students">Alunos presentes:</string>
     <string name="seminar_passcode_is">O código desse seminário é:</string>
     <string name="type_seminar_passcode">Digite o código do seminário</string>
+    <string name="successful_postponed_attendance">Conexão reestabelecida e presença
+        confirmada</string>
+    <string name="unsuccessful_postponed_attendance">Conexão reestabelecida e presença não
+        confirmada</string>
 
 
     <!--General-->
@@ -61,5 +65,7 @@
     <string name="loadingMessage">Carregando…</string>
     <string name="at_seminar">no seminário</string>
     <string name="wrong_passcode">Código incorreto</string>
+    <string name="maybe">talvez</string>
+    <string name="postponed_attendance">Sua presença será confirmada quando houver conexão com a internet</string>
 
 </resources>

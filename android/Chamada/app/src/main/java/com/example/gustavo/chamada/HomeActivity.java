@@ -58,6 +58,7 @@ public class HomeActivity extends Activity {
     public void onResume() {
         super.onResume();
         fetchUserName();
+        fetchSeminarList();
     }
 
 

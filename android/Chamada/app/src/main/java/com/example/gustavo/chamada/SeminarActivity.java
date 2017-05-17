@@ -59,7 +59,7 @@ public class SeminarActivity extends Activity {
     public void fetchSeminar(String id) {
         final Context context = this;
         final TextView seminarNameView = (TextView) findViewById(R.id.seminarNameView);
-
+        mySeminar = new Seminar(id);
         class OnFetchedSeminar implements Response.Listener<String> {
             @Override
             public void onResponse(String response) {
@@ -80,7 +80,7 @@ public class SeminarActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String message = context.getString(R.string.no_server_connection);
-                ScreenUtils.showMessaDialog(context, message, null);
+                ScreenUtils.showMessaDialog(context, message, new OnSeminarError());
                 LinearLayout seminarActivityLayout = (LinearLayout)
                         findViewById(R.id.seminarActivityLayout);
                 ScreenUtils.setLoadingView(seminarActivityLayout, true);
@@ -241,7 +241,9 @@ public class SeminarActivity extends Activity {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             finish();
-            startActivity(getIntent());
+            Intent intent = getIntent();
+            intent.putExtra("seminar_id", mySeminar.getId());
+            startActivity(intent);
         }
     }
 
@@ -274,6 +276,9 @@ public class SeminarActivity extends Activity {
                                 message += " " + context.getString(R.string.at_seminar) + ": " +
                                         mySeminar.getName();
                             }
+                            else if (obj.get("success").equals(R.string.maybe)) {
+                                message = getString(R.string.postponed_attendance);
+                            }
                             else
                                 message = context.getString(R.string.unsuccessful_attendance);
                         }
@@ -296,7 +301,8 @@ public class SeminarActivity extends Activity {
 
                 if (typedPasscode.equals(mySeminar.getPasscode())) {
                     ServerConnection sc = ServerConnection.getInstance(context);
-                    sc.sendAttendance(new OnAttendanceResponse(), new OnAttendanceError(), params);
+                    sc.sendAttendance(new OnAttendanceResponse(), new OnAttendanceError(), params,
+                            context);
                 }
                 else {
                     String message = context.getString(R.string.wrong_passcode);

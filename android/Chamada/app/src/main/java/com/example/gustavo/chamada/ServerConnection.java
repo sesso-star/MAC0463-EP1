@@ -1,10 +1,18 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -19,6 +27,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -45,6 +54,11 @@ public class ServerConnection extends Activity {
      * We need a singleton in this class because a server queue need a context, which should be
      * the same for all requests once it is set. */
     private static ServerConnection instance = null;
+
+
+    /* Stores the current connection receiver object. This object extends BroadcastReceiver and it
+     * is responsible for handling events of getting internet access */
+    static ConnectionReceiver currentConnectionReceiver = null;
 
 
     private ServerConnection(Context context) {
@@ -203,9 +217,10 @@ public class ServerConnection extends Activity {
 
 
     /* Sends a student attendance to a seminar to the server */
+    /* Here we implement a postponed of attendance whenever there's no internet connection. */
     public void sendAttendance(Response.Listener<String> responseListener,
                                Response.ErrorListener errorListener,
-                               final Map<String, String> params) {
+                               final Map<String, String> params, Context context) {
         String url = serverUrl + "/attendence/submit";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
                 errorListener) {
@@ -214,7 +229,98 @@ public class ServerConnection extends Activity {
                 return params;
             }
         };
-        addToRequestQueue(stringRequest);
+
+        if (theresInternetConnection(context))
+            addToRequestQueue(stringRequest);
+        else {
+            /* Delivers "maybe" response */
+            JSONObject responseObj = new JSONObject();
+            try {
+                responseObj.put("success", R.string.maybe);
+            } catch (JSONException e) {
+                errorListener.onErrorResponse(new VolleyError());
+            }
+            String response = responseObj.toString().replace("\\\"", "\"");
+            responseListener.onResponse(response);
+
+            /* Creates a listener to connection status change and if that means we have connection,
+             * try to send it again. If it fails again, then nothing is done. */
+
+            StringRequest newStringRequest = new StringRequest(Request.Method.POST, url,
+                    new OnSuccessfulPostponedAttendance(),
+                    new OnUnsuccessfulPostponedAttendance()) {
+                @Override
+                protected Map<String,String> getParams() throws AuthFailureError {
+                    return params;
+                }
+            };
+            registerConnectionReceiver(new ConnectionReceiver(newStringRequest));
+        }
+    }
+
+
+    void registerConnectionReceiver(ConnectionReceiver cr) {
+        if (currentConnectionReceiver != null)
+            myContext.unregisterReceiver(currentConnectionReceiver);
+        currentConnectionReceiver = cr;
+
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        myContext.registerReceiver(cr, intentFilter);
+    }
+
+
+    class OnSuccessfulPostponedAttendance implements Response.Listener<String> {
+
+        @Override
+        public void onResponse(String response) {
+            JSONObject obj;
+            String message;
+            try {
+                obj = new JSONObject(response);
+                if (obj.getString("success").equals("true"))
+                    message = myContext.getString(R.string.successful_postponed_attendance);
+                else
+                    message = myContext.getString(R.string.unsuccessful_postponed_attendance);
+            }
+            catch (Exception e) {
+                message = myContext.getString(R.string.unsuccessful_postponed_attendance);
+            }
+            myContext.unregisterReceiver(currentConnectionReceiver);
+            currentConnectionReceiver = null;
+            Toast.makeText(myContext.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    class OnUnsuccessfulPostponedAttendance implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            myContext.unregisterReceiver(currentConnectionReceiver);
+            currentConnectionReceiver = null;
+            String message = myContext.getString(R.string.unsuccessful_postponed_attendance);
+            Toast.makeText(myContext.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    public class ConnectionReceiver extends BroadcastReceiver {
+
+        private StringRequest stringRequest;
+
+        ConnectionReceiver(StringRequest stringRequest) {
+            this.stringRequest = stringRequest;
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            NetworkInfo info = (NetworkInfo) extras
+                    .getParcelable("networkInfo");
+            NetworkInfo.State state = info.getState();
+            if (state == NetworkInfo.State.CONNECTED) {
+                addToRequestQueue(stringRequest);
+            }
+        }
     }
 
 
@@ -279,5 +385,13 @@ public class ServerConnection extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         /*do nothing*/
                     }});
+    }
+
+    static boolean theresInternetConnection (Context context) {
+        ConnectivityManager connectivityManager;
+        connectivityManager = (ConnectivityManager)
+                context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
