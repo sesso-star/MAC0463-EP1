@@ -26,8 +26,8 @@ class Seminar {
         try {
             JSONObject data = obj.getJSONObject("data");
             this.name = data.getString("name");
-            this.id = Integer.parseInt(obj.getString("id"));
-            passcode = data.getString("data");
+            this.id = Integer.parseInt(data.getString("id"));
+            this.passcode = data.getString("data");
         }
         catch (Exception e) {
             throw e;

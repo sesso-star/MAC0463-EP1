@@ -21,9 +21,6 @@ class ScreenUtils {
     private static int PROGRESS_BAR_ID = 42;
     static ProgressDialog loadingDialog = null;
 
-    /* This code is based on the one provided at:
-    * http://stackoverflow.com/questions/6238881/how-to-disable-all-click-events-of-a-layout
-    * */
     static void setLoadingView(View view, boolean enabled) {
         Context context = view.getContext();
         view.setEnabled(enabled);
@@ -46,6 +43,9 @@ class ScreenUtils {
             loadingDialog = null;
         }
 
+        /* This piece of code is based on the one provided at:
+        * http://stackoverflow.com/questions/6238881/how-to-disable-all-click-events-of-a-layout
+        * */
         if (view instanceof ViewGroup) {
             ViewGroup group = (ViewGroup) view;
             for (int idx = 0 ; idx < group.getChildCount(); idx++) {

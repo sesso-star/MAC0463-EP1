@@ -50,4 +50,5 @@
     <string name="unsuccessful_attendance">Não conseguimos confirmar sua presença</string>
     <string name="attended_students">Alunos presentes:</string>
     <string name="loadingMessage">Carregando...</string>
+    <string name="seminar_passcode_is">A senha desse seminário é:</string>
 </resources>

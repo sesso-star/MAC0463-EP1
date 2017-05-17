@@ -59,7 +59,7 @@
                 android:layout_height="40dp"
                 android:background="@drawable/padlock"
                 android:gravity="end"
-                android:onClick="seminarPasswordClick" />
+                android:onClick="seminarPasscodeClick" />
 
         </LinearLayout>
     </LinearLayout>

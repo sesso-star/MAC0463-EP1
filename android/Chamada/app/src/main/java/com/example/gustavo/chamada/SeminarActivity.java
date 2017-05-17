@@ -1,12 +1,16 @@
 package com.example.gustavo.chamada;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -44,6 +48,12 @@ public class SeminarActivity extends Activity {
         ScreenUtils.setLoadingView(seminarActivityLayout, false);
     }
 
+    private class OnSeminarError implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            onBackPressed();
+        }
+    }
 
     public void fetchSeminar(String id) {
         final Context context = this;
@@ -56,13 +66,12 @@ public class SeminarActivity extends Activity {
                     JSONObject obj = new JSONObject(response);
                     mySeminar = new Seminar(obj);
                     seminarNameView.setText(mySeminar.getName());
+                    fetchSeminarAttendance();
                 }
                 catch (Exception e) {
                     String message = context.getString(R.string.blame_server);
-                    ScreenUtils.showMessaDialog(context, message, null);
-
+                    ScreenUtils.showMessaDialog(context, message, new OnSeminarError());
                 }
-                fetchSeminarAttendance();
             }
         }
 
@@ -97,7 +106,7 @@ public class SeminarActivity extends Activity {
                 }
                 catch (Exception e) {
                     String message = context.getString(R.string.blame_server);
-                    ScreenUtils.showMessaDialog(context, message, null);
+                    ScreenUtils.showMessaDialog(context, message, new OnSeminarError());
                 }
             }
         }
@@ -106,7 +115,7 @@ public class SeminarActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 String message = context.getString(R.string.no_server_connection);
-                ScreenUtils.showMessaDialog(context, message, null);
+                ScreenUtils.showMessaDialog(context, message, new OnSeminarError());
             }
         }
 
@@ -140,10 +149,7 @@ public class SeminarActivity extends Activity {
                 findViewById(R.id.seminarActivityLayout);
         final String id = mySeminar.getId();
         ScreenUtils.setLoadingView(seminarActivityLayout, false);
-
-        seminarActivityLayout.setGravity(Gravity.CENTER);
-        seminarActivityLayout.removeAllViews();
-        seminarActivityLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.White));
+        clearSeminarView();
         ImageView imgView = new ImageView(context);
         seminarActivityLayout.addView(imgView);
 
@@ -164,6 +170,15 @@ public class SeminarActivity extends Activity {
             }
         }
         new createNShowQR().execute(imgView);
+    }
+
+
+    void clearSeminarView() {
+        final LinearLayout seminarActivityLayout = (LinearLayout)
+                findViewById(R.id.seminarActivityLayout);
+        seminarActivityLayout.setGravity(Gravity.CENTER);
+        seminarActivityLayout.removeAllViews();
+        seminarActivityLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.White));
     }
 
     /* Encodes a text to a bitmap QR code */
@@ -199,15 +214,32 @@ public class SeminarActivity extends Activity {
 
     /* Listener for the passcode button */
     public void seminarPasscodeClick(View view) {
-        showSeminarPassword();
+        if (AppUser.getCurrentUser().isProfessor())
+            showSeminarPassword();
+        else
+            attendWithPasscode();
     }
 
 
-    void showSeminarPassword() {
-        final Context context = this;
-
+    /* Clears screen and shows passcode */
+    public void showSeminarPassword() {
+        TextView passcodeTextView = new TextView(this);
+        clearSeminarView();
+        String message = getString(R.string.seminar_passcode_is) + "\n" + mySeminar.getPasscode();
+        passcodeTextView.setText(message);
+        passcodeTextView.setGravity(Gravity.CENTER);
+        passcodeTextView.setTextColor(ContextCompat.getColor(this, R.color.mainBlueish));
+        passcodeTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+        final LinearLayout seminarActivityLayout = (LinearLayout)
+                findViewById(R.id.seminarActivityLayout);
+        seminarActivityLayout.addView(passcodeTextView);
     }
 
+
+    /**/
+    public void attendWithPasscode() {
+
+    }
 
     private class StudentListButton extends ListButton {
 
