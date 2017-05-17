@@ -52,8 +52,8 @@
         <Button
             android:id="@+id/changeProfileButton"
             style="@android:style/Widget.Button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="0dp"
             android:background="@drawable/profile"
@@ -64,8 +64,8 @@
         <Button
             android:id="@+id/addUserButton"
             style="@android:style/Widget.Button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/add_user"
@@ -82,8 +82,8 @@
 
             <Button
                 android:id="@+id/qrCodeButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/qr_code"
                 android:onClick="qrCodeClick" />
         </LinearLayout>

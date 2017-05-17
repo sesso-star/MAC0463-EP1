@@ -49,4 +49,5 @@
     <string name="successful_attendance">Presença confirmada</string>
     <string name="unsuccessful_attendance">Não conseguimos confirmar sua presença</string>
     <string name="attended_students">Alunos presentes:</string>
+    <string name="loadingMessage">Carregando...</string>
 </resources>

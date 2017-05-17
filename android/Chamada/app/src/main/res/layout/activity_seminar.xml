@@ -46,8 +46,8 @@
 
             <Button
                 android:id="@+id/qrCodeButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/qr_code"
                 android:gravity="end"
@@ -55,8 +55,8 @@
 
             <Button
                 android:id="@+id/seminarPasscodeButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/padlock"
                 android:gravity="end"
                 android:onClick="seminarPasswordClick" />

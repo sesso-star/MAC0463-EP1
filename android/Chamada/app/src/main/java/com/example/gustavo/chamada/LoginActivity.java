@@ -41,7 +41,7 @@ public class LoginActivity extends Activity {
         String passwd = passwdText.getText().toString();
         // We try to login as professor, if we can't login, we try again as a student
         postLogin(nusp, passwd, "teacher");
-        ScreenUtils.enableDisableView(layout, false);
+        ScreenUtils.setLoadingView(layout, false);
     }
 
     /*
@@ -75,7 +75,7 @@ public class LoginActivity extends Activity {
         public void onErrorResponse(VolleyError error) {
             TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
-            ScreenUtils.enableDisableView(layout, true);
+            ScreenUtils.setLoadingView(layout, true);
             noLoginTextView.setText(getString(R.string.no_server_connection));
             noLoginTextView.setVisibility(View.VISIBLE);
         }
@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
         TextView noLoginTextView = (TextView) findViewById(R.id.noLoginTextView);
         Button signupButton = (Button) findViewById(R.id.singupButton);
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.loginLayout);
-        ScreenUtils.enableDisableView(layout, true);
+        ScreenUtils.setLoadingView(layout, true);
         int authorized;
         JSONObject obj;
         try {

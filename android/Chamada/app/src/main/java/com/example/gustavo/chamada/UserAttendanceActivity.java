@@ -25,7 +25,7 @@ public class UserAttendanceActivity extends Activity {
 
         LinearLayout seminarActivityLayout = (LinearLayout)
                 findViewById(R.id.userAttendanceActivityLayout);
-        ScreenUtils.enableDisableView(seminarActivityLayout, false);
+        ScreenUtils.setLoadingView(seminarActivityLayout, false);
         fetchAttendanceList();
     }
 
@@ -129,6 +129,6 @@ public class UserAttendanceActivity extends Activity {
 
         LinearLayout seminarActivityLayout = (LinearLayout)
                 findViewById(R.id.userAttendanceActivityLayout);
-        ScreenUtils.enableDisableView(seminarActivityLayout, true);
+        ScreenUtils.setLoadingView(seminarActivityLayout, true);
     }
 }

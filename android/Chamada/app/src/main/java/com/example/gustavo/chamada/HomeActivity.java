@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
@@ -34,7 +33,7 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.activity_home);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
-        ScreenUtils.enableDisableView(layout, false);
+        ScreenUtils.setLoadingView(layout, false);
         setUserLayout();
 
         fetchUserName();
@@ -187,7 +186,7 @@ public class HomeActivity extends Activity {
             userNameT.setText(u.getName());
         }
         LinearLayout layout = (LinearLayout) findViewById(R.id.homeLayout);
-        ScreenUtils.enableDisableView(layout, true);
+        ScreenUtils.setLoadingView(layout, true);
     }
 
 

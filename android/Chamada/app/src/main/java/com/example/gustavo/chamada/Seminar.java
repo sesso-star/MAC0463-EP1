@@ -10,6 +10,7 @@ import org.json.JSONObject;
 class Seminar {
     private String name;
     private int id;
+    private String passcode;
 
     Seminar(String id, String name) {
         this.name = name;
@@ -22,14 +23,11 @@ class Seminar {
     }
 
     Seminar(JSONObject obj) throws JSONException {
-        String name = "";
-        String id = "";
         try {
             JSONObject data = obj.getJSONObject("data");
-            name = data.getString("name");
-            id = data.getString("id");
-            this.name = name;
-            this.id = Integer.parseInt(id);
+            this.name = data.getString("name");
+            this.id = Integer.parseInt(obj.getString("id"));
+            passcode = data.getString("data");
         }
         catch (Exception e) {
             throw e;
@@ -50,5 +48,9 @@ class Seminar {
 
     String getId() {
         return "" + id;
+    }
+
+    String getPasscode() {
+        return passcode;
     }
 }

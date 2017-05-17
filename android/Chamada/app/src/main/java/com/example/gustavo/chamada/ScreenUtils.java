@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.app.ProgressDialog;
 import android.widget.TextView;
 
 /**
@@ -17,10 +18,14 @@ import android.widget.TextView;
 
 class ScreenUtils {
 
+    private static int PROGRESS_BAR_ID = 42;
+    static ProgressDialog loadingDialog = null;
+
     /* This code is based on the one provided at:
     * http://stackoverflow.com/questions/6238881/how-to-disable-all-click-events-of-a-layout
     * */
-    static void enableDisableView(View view, boolean enabled) {
+    static void setLoadingView(View view, boolean enabled) {
+        Context context = view.getContext();
         view.setEnabled(enabled);
 
         if (enabled)
@@ -28,10 +33,23 @@ class ScreenUtils {
         else
             view.setAlpha((float) .5);
 
+        if (!enabled && loadingDialog == null) {
+            loadingDialog = new ProgressDialog(context, R.style.Chamada_DialogBox);
+            loadingDialog.setCancelable(true);
+            loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            loadingDialog.setMessage(context.getString(R.string.loadingMessage));
+            loadingDialog.show();
+        }
+        else if (enabled && loadingDialog != null)
+        {
+            loadingDialog.dismiss();
+            loadingDialog = null;
+        }
+
         if (view instanceof ViewGroup) {
             ViewGroup group = (ViewGroup) view;
             for (int idx = 0 ; idx < group.getChildCount(); idx++) {
-                enableDisableView(group.getChildAt(idx), enabled);
+                setLoadingView(group.getChildAt(idx), enabled);
                 view.setEnabled(enabled);
             }
         }

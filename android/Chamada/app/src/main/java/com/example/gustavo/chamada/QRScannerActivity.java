@@ -150,6 +150,9 @@ public class QRScannerActivity extends Activity {
                 ScreenUtils.showMessaDialog(this, message, new OnFinishingReadingQR());
             }
         }
+        else {
+            onBackPressed();
+        }
     }
 
 

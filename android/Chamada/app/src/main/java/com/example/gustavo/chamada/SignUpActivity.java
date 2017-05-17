@@ -49,7 +49,7 @@ public class SignUpActivity extends Activity {
         @Override
         public void onResponse (final String response) {
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.singUpLayout);
-            ScreenUtils.enableDisableView(layout, true);
+            ScreenUtils.setLoadingView(layout, true);
             proccessSignUpResponse(response, nusp, userType);
         }
     }
@@ -61,7 +61,7 @@ public class SignUpActivity extends Activity {
         @Override
         public void onErrorResponse(VolleyError error) {
             ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.singUpLayout);
-            ScreenUtils.enableDisableView(layout, true);
+            ScreenUtils.setLoadingView(layout, true);
             String message = getString(R.string.no_server_connection);
             ScreenUtils.showMessaDialog(SignUpActivity.this, message, null);
         }
@@ -99,7 +99,7 @@ public class SignUpActivity extends Activity {
         sc.singUp(new SignUpResponseListener(nusp, pass, userType), new SignUpErrorListener(),
                 userType, params);
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.singUpLayout);
-        ScreenUtils.enableDisableView(layout, false);
+        ScreenUtils.setLoadingView(layout, false);
     }
 
 

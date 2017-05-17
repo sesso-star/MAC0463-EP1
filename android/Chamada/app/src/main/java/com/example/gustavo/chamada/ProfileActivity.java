@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.android.volley.Response;
@@ -25,6 +26,11 @@ public class ProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        if (AppUser.getCurrentUser().isProfessor()) {
+            Button attendedSeminarsButton = (Button) findViewById(R.id.showAttendanceButton);
+            attendedSeminarsButton.setVisibility(View.GONE);
+        }
     }
 
 

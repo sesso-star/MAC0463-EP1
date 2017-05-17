@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -22,14 +22,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.android.gms.vision.text.Line;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.encoder.QRCode;
 
 
 public class SeminarActivity extends Activity {
@@ -45,7 +41,7 @@ public class SeminarActivity extends Activity {
         fetchSeminar(seminarId);
         LinearLayout seminarActivityLayout = (LinearLayout)
                 findViewById(R.id.seminarActivityLayout);
-        ScreenUtils.enableDisableView(seminarActivityLayout, false);
+        ScreenUtils.setLoadingView(seminarActivityLayout, false);
     }
 
 
@@ -66,7 +62,7 @@ public class SeminarActivity extends Activity {
                     ScreenUtils.showMessaDialog(context, message, null);
 
                 }
-                fetchSeminarAttendance(mySeminar.getId());
+                fetchSeminarAttendance();
             }
         }
 
@@ -77,7 +73,7 @@ public class SeminarActivity extends Activity {
                 ScreenUtils.showMessaDialog(context, message, null);
                 LinearLayout seminarActivityLayout = (LinearLayout)
                         findViewById(R.id.seminarActivityLayout);
-                ScreenUtils.enableDisableView(seminarActivityLayout, true);
+                ScreenUtils.setLoadingView(seminarActivityLayout, true);
             }
         }
 
@@ -86,7 +82,7 @@ public class SeminarActivity extends Activity {
     }
 
 
-    private void fetchSeminarAttendance(String seminarId) {
+    private void fetchSeminarAttendance() {
         final Context context = this;
 
         /* Listener for fetching list of students who attended this seminar */
@@ -139,21 +135,41 @@ public class SeminarActivity extends Activity {
 
     /* Creates QR code that contains the seminar id and displays it on the screen */
     private void showQRCode() {
-        String id = mySeminar.getId();
-        Bitmap qrCodeBitmap = TextToImageEncode(id);
-        ImageView imgView = new ImageView(this);
-        imgView.setImageBitmap(qrCodeBitmap);
-        LinearLayout thisLayout = (LinearLayout) findViewById(R.id.seminarActivityLayout);
-        thisLayout.setGravity(Gravity.CENTER);
-        thisLayout.removeAllViews();
-        thisLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.White));
-        thisLayout.addView(imgView);
+        final Context context = this;
+        final LinearLayout seminarActivityLayout = (LinearLayout)
+                findViewById(R.id.seminarActivityLayout);
+        final String id = mySeminar.getId();
+        ScreenUtils.setLoadingView(seminarActivityLayout, false);
+
+        seminarActivityLayout.setGravity(Gravity.CENTER);
+        seminarActivityLayout.removeAllViews();
+        seminarActivityLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.White));
+        ImageView imgView = new ImageView(context);
+        seminarActivityLayout.addView(imgView);
+
+        class createNShowQR extends AsyncTask<ImageView, Void, Bitmap> {
+            private ImageView qrImageView;
+
+            @Override
+            protected Bitmap doInBackground(ImageView... params) {
+                this.qrImageView = params[0];
+                Bitmap qrCodeBitmap = TextToImageEncode(id);
+                return qrCodeBitmap;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap result) {
+                qrImageView.setImageBitmap(result);
+                ScreenUtils.setLoadingView(seminarActivityLayout, true);
+            }
+        }
+        new createNShowQR().execute(imgView);
     }
 
     /* Encodes a text to a bitmap QR code */
     private Bitmap TextToImageEncode(String text) {
         BitMatrix bitMatrix;
-        final int QR_CODE_SIZE = 700;
+        final int QR_CODE_SIZE = 600;
         try {
             bitMatrix = new MultiFormatWriter().encode(text,
                     BarcodeFormat.DATA_MATRIX.QR_CODE, QR_CODE_SIZE, QR_CODE_SIZE, null);
@@ -181,10 +197,15 @@ public class SeminarActivity extends Activity {
     }
 
 
-    public void changeSeminarNameClick(View view) {
+    /* Listener for the passcode button */
+    public void seminarPasscodeClick(View view) {
+        showSeminarPassword();
     }
 
-    public void seminarPasswordClick(View view) {
+
+    void showSeminarPassword() {
+        final Context context = this;
+
     }
 
 
@@ -239,6 +260,6 @@ public class SeminarActivity extends Activity {
 
         LinearLayout seminarActivityLayout = (LinearLayout)
                 findViewById(R.id.seminarActivityLayout);
-        ScreenUtils.enableDisableView(seminarActivityLayout, true);
+        ScreenUtils.setLoadingView(seminarActivityLayout, true);
     }
 }
