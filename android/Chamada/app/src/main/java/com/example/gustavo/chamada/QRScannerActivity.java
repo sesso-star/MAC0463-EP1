@@ -176,8 +176,8 @@ public class QRScannerActivity extends Activity {
                 try {
                     obj = new JSONObject(response);
                     Seminar s = new Seminar(obj);
-                    message = getString(R.string.successful_attendance) + context.getString(R.string.at_seminar) +
-                            s.getName();
+                    message = getString(R.string.successful_attendance) + " " +
+                            context.getString(R.string.at_seminar) + "\n" + s.getName();
                 }
                 catch (Exception e) {
                     message = getString(R.string.unsuccessful_attendance);
