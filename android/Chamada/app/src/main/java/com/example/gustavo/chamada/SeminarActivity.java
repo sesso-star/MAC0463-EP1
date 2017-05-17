@@ -2,6 +2,7 @@ package com.example.gustavo.chamada;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -120,8 +121,24 @@ public class SeminarActivity extends Activity {
     }
 
 
-    /* Listener to the qr code click. It should create a QR code image and show it to the user */
+    /* Listener to the qr code click */
     public void qrCodeClick(View view) {
+        if (AppUser.getCurrentUser().isProfessor())
+            showQRCode();
+        else
+            startQRCodeActivity();
+    }
+
+
+    /* Calls QR code activity */
+    public void startQRCodeActivity() {
+        Intent intent = new Intent(this, QRScannerActivity.class);
+        startActivity(intent);
+    }
+
+
+    /* Creates QR code that contains the seminar id and displays it on the screen */
+    private void showQRCode() {
         String id = mySeminar.getId();
         Bitmap qrCodeBitmap = TextToImageEncode(id);
         ImageView imgView = new ImageView(this);
@@ -132,7 +149,6 @@ public class SeminarActivity extends Activity {
         thisLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.White));
         thisLayout.addView(imgView);
     }
-
 
     /* Encodes a text to a bitmap QR code */
     private Bitmap TextToImageEncode(String text) {
@@ -166,7 +182,9 @@ public class SeminarActivity extends Activity {
 
 
     public void changeSeminarNameClick(View view) {
+    }
 
+    public void seminarPasswordClick(View view) {
     }
 
 

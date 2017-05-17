@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -98,7 +99,7 @@ public class QRScannerActivity extends Activity {
                     for (int i = 0; i < barcodes.size(); i++) {
                         Map<String, String> params = new HashMap<>();
                         Barcode code = barcodes.valueAt(i);
-                        String seminar_id = code.rawValue;
+                        final String seminar_id = code.rawValue;
                         User u = AppUser.getCurrentUser();
                         params.put("seminar_id", seminar_id);
                         params.put("nusp", u.getNusp());
@@ -110,8 +111,10 @@ public class QRScannerActivity extends Activity {
                                 String message;
                                 try {
                                     obj = new JSONObject(response);
-                                    if (obj.getString("success").equals ("true"))
-                                        message = getString(R.string.successful_attendance);
+                                    if (obj.getString("success").equals ("true")) {
+                                        showConfimedAttendanceMessage(seminar_id);
+                                        return;
+                                    }
                                     else
                                         message = getString(R.string.unsuccessful_attendance);
                                 } catch (JSONException e) {
@@ -147,6 +150,41 @@ public class QRScannerActivity extends Activity {
                 ScreenUtils.showMessaDialog(this, message, new OnFinishingReadingQR());
             }
         }
+    }
+
+
+    /* Shows a message dialog confirming semiar attendance */
+    public void showConfimedAttendanceMessage(String seminar_id) {
+        final Context context = this;
+
+        class OnSeminarNameRequest implements Response.Listener<String> {
+            @Override
+            public void onResponse(String response) {
+                String message;
+                JSONObject obj;
+                try {
+                    obj = new JSONObject(response);
+                    Seminar s = new Seminar(obj);
+                    message = getString(R.string.successful_attendance) + " no seminário: " +
+                            s.getName();
+                }
+                catch (Exception e) {
+                    message = getString(R.string.unsuccessful_attendance);
+                }
+                ScreenUtils.showMessaDialog(context, message, new OnFinishingReadingQR());
+            }
+        }
+
+        class OnSeminarNameError implements Response.ErrorListener {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String message = getString(R.string.unsuccessful_attendance);
+                ScreenUtils.showMessaDialog(context, message, new OnFinishingReadingQR());
+            }
+        }
+
+        ServerConnection sc = ServerConnection.getInstance(context);
+        sc.fetchSeminarInfo(new OnSeminarNameRequest(), new OnSeminarNameError(),seminar_id);
     }
 
 

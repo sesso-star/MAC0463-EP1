@@ -42,7 +42,7 @@ public class HomeActivity extends Activity {
     }
 
 
-    public void setUserLayout() {
+    private void setUserLayout() {
         Button addUserButton = (Button) findViewById(R.id.addUserButton);
         Button addSeminarButton = (Button) findViewById(R.id.addSeminarButton);
         Button readQR = (Button) findViewById(R.id.qrCodeButton);
