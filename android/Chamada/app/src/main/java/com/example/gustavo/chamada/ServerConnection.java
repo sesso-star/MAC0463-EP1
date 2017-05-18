@@ -56,11 +56,6 @@ public class ServerConnection extends Activity {
     private static ServerConnection instance = null;
 
 
-    /* Stores the current connection receiver object. This object extends BroadcastReceiver and it
-     * is responsible for handling events of getting internet access */
-    static ConnectionReceiver currentConnectionReceiver = null;
-
-
     private ServerConnection(Context context) {
         myContext = context;
         requestQueue = getRequestQueue ();
@@ -260,17 +255,13 @@ public class ServerConnection extends Activity {
 
 
     void registerConnectionReceiver(ConnectionReceiver cr) {
-        if (currentConnectionReceiver != null)
-            myContext.unregisterReceiver(currentConnectionReceiver);
-        currentConnectionReceiver = cr;
-
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         myContext.registerReceiver(cr, intentFilter);
     }
 
 
-    class OnSuccessfulPostponedAttendance implements Response.Listener<String> {
+    private class OnSuccessfulPostponedAttendance implements Response.Listener<String> {
 
         @Override
         public void onResponse(String response) {
@@ -286,17 +277,14 @@ public class ServerConnection extends Activity {
             catch (Exception e) {
                 message = myContext.getString(R.string.unsuccessful_postponed_attendance);
             }
-            myContext.unregisterReceiver(currentConnectionReceiver);
-            currentConnectionReceiver = null;
+
             Toast.makeText(myContext.getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
     }
 
-    class OnUnsuccessfulPostponedAttendance implements Response.ErrorListener {
+    private class OnUnsuccessfulPostponedAttendance implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            myContext.unregisterReceiver(currentConnectionReceiver);
-            currentConnectionReceiver = null;
             String message = myContext.getString(R.string.unsuccessful_postponed_attendance);
             Toast.makeText(myContext.getApplicationContext(), message, Toast.LENGTH_LONG).show();
         }
@@ -319,6 +307,7 @@ public class ServerConnection extends Activity {
             NetworkInfo.State state = info.getState();
             if (state == NetworkInfo.State.CONNECTED) {
                 addToRequestQueue(stringRequest);
+                myContext.unregisterReceiver(this);
             }
         }
     }
