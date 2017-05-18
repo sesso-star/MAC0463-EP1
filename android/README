@@ -1,0 +1,100 @@
+Esse aplicativo foi criado como um exercício programa da matéria 
+Computação Móvel, ministrada pelo professor Alfredo Goldman, no IME-USP.
+
+Autores: Bruno Sesso
+         Gustavo Estrela de Matos
+
+
+Funcionalidades implementadas nos aplicativos:
+- Login
+- Alteração de cadastro
+- Cadastro de novos professores
+- Cadastro de novos alunos
+- Cadastro de seminários
+- Consulta de lista de seminários
+- Consulta de lista de presença de seminários
+- Consulta de seminários assitidos pelo usuário
+- Comprovação por presença nos seguintes métodos:
+    - QR code, que carrega o id do seminário
+    - Passcode, uma senha para confirmar presença no semiário 
+    (utilizamos o campo data do servidor para salvar a senha).
+- Comprovação por presença mesmo com perda de conectividade, desde que
+o aplicativo mantenha-se aberto
+
+
+1 Tela de Login
+- Aluno ou professor devem digitar nusp e senha e clicar em entrar.
+ Se houver falha na identificação, o aplicativo mostra o botão 
+"Cadastre-se", onde alunos podem se cadastrar (apenas professores 
+cadastram professores).
+
+
+2 Tela principal
+- Mensagem de boas vindas, seguida do nome do usuário. Ao clicar no nome
+do usuário, é possível mudar o nome.
+- Lista com todos os seminários. Ao clicar em um seminário, a tela de
+informações daquele seminário é exibida.
+- Botão perfil. Ao clicar nesse botão, é exibida a tela com informações
+do usuário logado.
+
+2.1 Apenas para professores
+- Botão de adição. Ao clicar nele, o professor é capaz de adicionar um
+seminário. Para criar um seminário é necessário informar um nome e um
+código para o seminário. Esse código será usado futuramente pelos alunos
+que quiserem confirmar presença nesse seminário.
+- Botão usuário. Mostra a tela de cadastro de usuário, e desta vez é 
+possível adicionar aluno ou professor.
+
+2.2 Apenas para alunos
+- Botão QR. Ao clicar nesse botão, o usuário pode tirar a foto de um
+código QR, que deve ser mostrado pelo professor responsável pelo 
+seminário.
+
+
+3 Tela Perfil
+- Mostrar seminários assistidos.
+- Mudar nome. Para mudar o nome, é necessário informar a senha.
+- Mudar senha. Para mudar a senha, é necessário informar a senha atual.
+- Sair.
+
+
+4. Tela com seminário
+- Nome do seminário
+- Lista de alunos que assistiram o seminário
+
+4.1 Apenas para alunos
+- Botão QR. Faz leitura de um QR code e envia confirmação de presença.
+Atenção: se o QR code lido não for respectivo ao seminário em questão
+a presença será confirmada mesmo assim.
+- Botão cadeado. Pede ao aluno a chave do seminário, que deve ser 
+informada pelo professor.
+
+4.2 Apenas para professores
+- Botão QR. Gera o QR code necessário para confirmação de presença pelos
+alunos.
+- Botão cadeado. Mostra a senha de confimação de presença do seminário.
+
+
+5 Confirmações de presença
+5.1 QR Code
+- O código é gerado pelo professor, clicando no cadeado na tela de 
+informações do seminário.
+- O aluno deve ler o código QR e a presença será confirmada 
+automaticamente.
+5.2 Chave
+- A chave do seminário é escolhida pelo professor no momento de criação
+do seminário. Essa chave é guardada no campo "data" do banco de dados.
+- Para confirmar a presença em um seminário, o aluno deve ir até a tela
+de informações do respectivo seminário e informar a chave escolhida pelo
+professor.
+5.3 Conectividade
+- Se não houver acesso a internet no momento de confirmação de presença,
+o aplicativo segura a requisição de acesso ao servidor e a relança assim
+que houver conexão. É importante notar que:
+    - Podem ser feitas inúmeras confirmações de presença dessa maneira
+    - A confirmação acontece mesmo depois de logout
+    - O aplicativo esquece as requisições se ele for fechado
+
+Alguns dos ícones utilizados nesse aplicativo podem ser encontrados em:
+http://www.flaticon.com/free-icon/user_181549
+http://www.flaticon.com/free-icon/qr-code_107072
